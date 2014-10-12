@@ -9,10 +9,8 @@
 
 extern infoLinha * Linhas;
 
-int Analise (infoLinha *, FILE *);
+infoLinha * Analise (infoLinha *, FILE *);
 
-infoLinha * EscreveNumLinha(infoLinha *, int);
-
-void ini(infoLinha *);
+void ini(infoLinha *)
 
 #endif

@@ -11,7 +11,7 @@
 // }Teste;
 
 
-typedef struct
+typedef struct infoLinha
 {
     int numTokens;
     int numChars;

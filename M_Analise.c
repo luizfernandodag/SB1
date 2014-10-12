@@ -161,8 +161,8 @@ void ini(infoLinha * Linhas)
 {
     instrucoes = (char **)malloc(NumInstr*sizeof(char *));
     diretivas = (char **) malloc(NumDire*sizeof(char *));
-    LinhaAtual = (int *)malloc(1*sizeof(int));
-    LinhaAtual[0] = 0;
+    //LinhaAtual = (int *)malloc(1*sizeof(int));
+    //LinhaAtual[0] = 0;
     //Linhas = NULL;
     NumErros = (int *)malloc(1*sizeof(int));
     NumErros[0] = 0;
@@ -315,11 +315,11 @@ int verificaSeNumero( char *token)
    token = retiraEspaco(token);
 
 
-printf("%s\n", token);
+//printf("%s\n", token);
 
 
    for ( i = 0; i < strlen(token); i++)
-   {   printf("%c", token[i]);
+   {   //printf("%c", token[i]);
             
        //if(!(isdigit(token[i])||  (  (i == 0 && token[i] =='0') && ( i + 1 == 1) && token[i+1] == 'x'  ) || (token[i] == '.' && i < strlen(token) -1 ) ))
         if(!(isdigit(token[i])||(i == 0 && token[i] =='0') || ( i == 1) && token[i] == 'x'||(token[i] == '.' && i < strlen(token) -1 )))
@@ -340,7 +340,7 @@ void printErros(erros *errosInfo, int * NumErros)
 
    for (i = 0; i < NumErros[0]; i++)
    {
-     printf("\n  Erro %d, Linha = %d, Tipo = %d", i, errosInfo[i].NumLinha, errosInfo[i].TipoErro);
+     //printf("\n  Erro %d, Linha = %d, Tipo = %d", i, errosInfo[i].NumLinha, errosInfo[i].TipoErro);
    }
 
 
@@ -357,7 +357,7 @@ erros * verificaToken(char * Token, int linha,erros *errosInfo, int * NumErros, 
 
 //printf("AQUII 777777\n");
 
-   printf("\nNumErros = %d, \nString = %s size = %d \n", NumErros[0], Token, size);
+   //printf("\nNumErros = %d, \nString = %s size = %d \n", NumErros[0], Token, size);
    
 
 
@@ -492,7 +492,7 @@ LINHA atual (String)
 */
 
 
-infoLinha * lerLinha(FILE *ptr_file, fpos_t  pos,int * LinhaAtual ,infoLinha * Linhas)
+int lerLinha(FILE *ptr_file, fpos_t  pos,int * LinhaAtual ,infoLinha * Linhas)
 {
 	char c, cAntigo, *linha, *token;
     char ** tokensAUX;
@@ -513,12 +513,15 @@ infoLinha * lerLinha(FILE *ptr_file, fpos_t  pos,int * LinhaAtual ,infoLinha * L
 
 
     
-    printf("\nLinha atual = %d\n", LinhaAtual[0]);
+    //printf("\nLinha atual = %d\n", LinhaAtual[0]);
     LinhaAtual[0]++;
 
 // Lendo a linha
+    //printf("AAAAA\n");
     while((c = fgetc(ptr_file))!= '\n')
 	{
+        if(feof(ptr_file))
+            return 1;
 
     if(c == -1)
     break;   
@@ -541,7 +544,7 @@ infoLinha * lerLinha(FILE *ptr_file, fpos_t  pos,int * LinhaAtual ,infoLinha * L
         cAntigo = c; 
         size = ftell(ptr_file);
      	linha[i] = c;
-        printf("%c",c);
+      //  printf("%c",c);
 		i++;
         linha = (char *)realloc(linha,(i+1)*sizeof(char));
      
@@ -553,10 +556,13 @@ infoLinha * lerLinha(FILE *ptr_file, fpos_t  pos,int * LinhaAtual ,infoLinha * L
     //marcacao do fim da string
     linha = (char *)realloc(linha,(i+1)*sizeof(char));	
     linha[i] = '\0';
+  //  printf("BBBBBBB\n");
+    Linhas->linha = (char *)malloc(strlen(linha)*sizeof(char));
+    //printf("CCCCC\n" );
     Linhas->linha = linha;
     Linhas->numChars = i+1;
     //printf("%s\n", linha );
-    printf("\n Num Tokens = %d\n", numTokens);
+    //printf("\n Num Tokens = %d\n", numTokens);
 
 	
 	
@@ -567,7 +573,7 @@ infoLinha * lerLinha(FILE *ptr_file, fpos_t  pos,int * LinhaAtual ,infoLinha * L
     c = fgetc(ptr_file);
     if(c != ' ' )
     fsetpos (ptr_file, &pos);
-    printf("\n");
+    //printf("\n");
 
     //Lendo todos os tokens da linha e guardando na estrutura
     for(i = 0;i<numTokens;i++)
@@ -575,47 +581,26 @@ infoLinha * lerLinha(FILE *ptr_file, fpos_t  pos,int * LinhaAtual ,infoLinha * L
         token = lerToken(ptr_file);    
         Linhas->Tokens[i] = (char *)malloc(sizeof(token)*sizeof(char ));
         Linhas->Tokens[i] = token;
-        printf("\nTOKEN = %s tamanho = %d",token, strlen(token));
+      //  printf("\nTOKEN = %s tamanho = %d",token, strlen(token));
     }
 
     
     Linhas->numTokens = numTokens;
 
-    free(linha);
     fgetpos(ptr_file,&pos);
     //fazer a posicao voltar ao final da linha
     fsetpos (ptr_file, &pos);
-    printf("\nNUMTOKENS = %d",Linhas->.numTokens );
-
-
-        for(j = 0;j < Linhas->numTokens;j++)
-        {
-        
-            printf("\nToken %d = %s", j, Linhas->Tokens[j]);
-        }
-
-
-    /*for(i = 0; i < LinhaAtual[0]; i++)
-    {
-        printf("\nLinha %d, numTokens = %d", i,Linhas[i].numTokens);
-        for(j = 0;j < Linhas[i].numTokens;j++)
-        {
-        
-            printf("\nToken %d = %s", j, Linhas[i].Tokens[j]);
-        }
-    }*/
-        printf("\nAQUI 1111111111111111");
-
-    return Linhas;
+   
+    return 0;
 
 }
 
 
 
 
-infoLinha * LerArquivo( FILE *ptr_file, fpos_t  pos,int * LinhaAtual, infoLinha * Linhas, erros *errosInfo, int * NumErros)
+int LerArquivo( FILE *ptr_file, fpos_t  pos,int * LinhaAtual, infoLinha * Linhas, erros *errosInfo, int * NumErros)
 {
-    int NumLinhas = 0, i = LinhaAtual[0], j, k,numErrosAux;
+    int NumLinhas = 0, i = LinhaAtual[0], j, k,numErrosAux, fim;
     // char c;
     // while((c = fgetc(ptr_file))!= -1)
     // {
@@ -631,8 +616,10 @@ infoLinha * LerArquivo( FILE *ptr_file, fpos_t  pos,int * LinhaAtual, infoLinha 
 
     //for(i = 0;i <= NumLinhas;i++)
     //{
-        Linhas = lerLinha(ptr_file, pos,LinhaAtual, Linhas);
+        fim = lerLinha(ptr_file, pos,LinhaAtual, Linhas);
         //Linhas[LinhaAtual[0]].tokens.
+       // LinhaAtual[0]++;
+        
       
       for(j = 0;j< Linhas[i].numTokens; j++)
         {
@@ -661,7 +648,7 @@ infoLinha * LerArquivo( FILE *ptr_file, fpos_t  pos,int * LinhaAtual, infoLinha 
 
 
     
-    return Linhas;
+    return fim;
 }
 
 FILE * argSemEspacos(FILE * ptr_file)
@@ -701,9 +688,16 @@ FILE * argSemEspacos(FILE * ptr_file)
     return semEspacos;
 }
 
+infoLinha * EscreveNumLinha(infoLinha * Linhas, int num)
+{
+
+    Linhas->numLinha = num;
+
+    return Linhas;
+}
 
 
-infoLinha * Analise (infoLinha *Linhas, FILE *ptr_file)
+int Analise (infoLinha *Linhas, FILE *ptr_file)
 {
     
 
@@ -713,37 +707,14 @@ infoLinha * Analise (infoLinha *Linhas, FILE *ptr_file)
 	// 	printf("Digite o nome do arquivo no formato arg.txt ");
  //        return 0;
 	// }
+int fim;
+    LinhaAtual = (int *)malloc(1*sizeof(int));
+LinhaAtual[0] = 0;
 
-    ini(Linhas);//INICIALIZAR AS VARIAVEIS GLOBAIS	
+
+   ini(Linhas);//INICIALIZAR AS VARIAVEIS GLOBAIS	
 
     
-
-
-/*char * teste = maiuscula("SPACE");
-
-printf("teste = %s\n",teste ); 
-if(verificaSeInstrucao("   SUB"))
-    printf("instrucao!\n" );
-
-if(verificaSeDiretiva("   SPACE"))
-    printf("diretiva\n");
-
-char * espaco = "1 a b";
-printf("\n antes teste espaco = %s\n",espaco );
-
-espaco = retiraEspaco(espaco);
-
-printf("\n depois teste espaco = %s\n",espaco );
-
-char * num = " 2";
-
-if(verificaSeNumero( num))
-{
-    printf("\nNumero!");
-}
-else
-printf("\n Nao eh numero" );*/
-
 
 
 
@@ -785,13 +756,14 @@ printf("\n Nao eh numero" );*/
 
 
 
-    Linhas = LerArquivo(semEspacos, pos, LinhaAtual, Linhas,errosInfo, NumErros);
+    fim = LerArquivo(ptr_file, pos, LinhaAtual, Linhas,errosInfo, NumErros);
+    //printf("FFFFFFF\n");
+        
 
-
-	// fclose(ptr_file);
-    fclose(semEspacos);
+   // fclose(ptr_file);
+    //fclose(semEspacos);
     
-    return Linhas;
+    return fim;
     
 }
 
