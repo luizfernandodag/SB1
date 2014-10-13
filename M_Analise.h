@@ -9,9 +9,12 @@
 
 extern infoLinha * Linhas;
 
-int Analise (infoLinha *, FILE *);
+extern TS * tabelaSims;
+
+int Analise (infoLinha *, FILE *, TS*, int *);
 
 infoLinha * EscreveNumLinha(infoLinha *, int);
+TS * insereSimbolo(TS * , char *,int , int , int *  );
 
 void ini(infoLinha *);
 
