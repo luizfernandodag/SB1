@@ -20,6 +20,24 @@ typedef struct
     char **Tokens;
 }infoLinha;
 
+typedef struct
+{
+    int numAparicoes;
+    int * pilhaDePosicoes;
+    char * nome;
+
+}ListaSim;
+
+typedef struct 
+{
+    ListaSim simbolo;
+    int valor;
+    int def;
+    int valido;
+
+}TS;
+
+
 #endif
 
 
