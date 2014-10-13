@@ -8,6 +8,8 @@
 assembly* carregaMenmonicos(assembly *listaAssembly);
 assembly* insere(assembly* listaAssembly, char *mnemonico, int codigo, int tamanho);
 void imprime (assembly* l);
+assembly* busca (assembly* lista, char *mnemonico);
+
 
 //typedef struct Assembly assembly;
 
@@ -31,12 +33,25 @@ assembly* insere(assembly* listaAssembly, char *mnemonico, int codigo, int taman
 	return listaAux;
 }
 
+assembly* busca (assembly* lista, char *mnemonico)
+{
+	assembly* p;
+ 	for (p = lista; p!= NULL; p = p->pa){
+ 		if (!strcmp(p->mnemonico, mnemonico)){
+ 			return p;			
+ 		}		
+ 	}
+ 	return NULL;
+}
+
 void imprime (assembly* l)
 {
 	assembly* p;
 	for (p = l; p != NULL; p = p->pa)
 	{
-		printf("mnemonico = %s\n", p->mnemonico);	
+		printf("mnemonico = %s\n", p->mnemonico);
+		printf("codigo = %d\n", p->codigo);
+		printf("tamanho = %d\n", p->tamanho);	
 	}
 	
 }
@@ -106,19 +121,19 @@ assembly* carregaMenmonicos(assembly *listaAssembly)
 int main(int argc, char const *argv[])
 {
 	_Bool status;
-	assembly *listaAssembly = NULL;
-
-	// listaAssembly = (assembly *) malloc(1*sizeof(assembly));
-
-	//status = carregaMenmonicos(listaAssembly);
-
-	//while(status == 0)
-	//{
+	assembly *listaAssembly = NULL, *Teste;
 
 	listaAssembly = carregaMenmonicos(listaAssembly);
-	//}
 
-	imprime(listaAssembly);
+	Teste = busca(listaAssembly, "ADI");
+
+	if (Teste == NULL)
+	{
+		printf("Nao achou\n");
+	}
+	else{
+		printf("achou\n");
+	}
 	// while(listaAssembly != NULL)
 	// {
 	// 	printf("mnemonico = %s\n", listaAssembly->mnemonico);
