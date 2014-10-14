@@ -43,36 +43,42 @@ int main(int argc, char const *argv[])
 
 		EscreveNumLinha(linha, j);
 
-        for(k = 0; k < linha->numTokens; k++)
-        {
-        	printf("ABCD\n");
+  //       for(k = 0; k < linha->numTokens; k++)
+  //       {
+  //       	printf("ABCD\n");
 			
-			if(!verificaSeInstrucao(linha->Tokens[k]) && !verificaSeDiretiva(linha->Tokens[k]) )
-            {
-            	printf("ABCD2\n");
+		// 	if(!verificaSeInstrucao(linha->Tokens[k]) && !verificaSeDiretiva(linha->Tokens[k]) )
+  //           {
+  //           	printf("ABCD2\n");
 
             	
 
-                //printf("AAA111\n");
-                //numSim[0]++;
-                tabelaSims =  insereSimbolo( tabelaSims, linha->Tokens[k],posicao, 1,numSim );
-                printf("ABCD3\n");
-                //printTabelaSims( tabelaSims,numSimbolos);
-                posicao++;
+  //               //printf("AAA111\n");
+  //               //numSim[0]++;
+  //               tabelaSims =  insereSimbolo( tabelaSims, linha->Tokens[k],posicao, 1,numSim );
+  //               printf("ABCD3\n");
+  //               //printTabelaSims( tabelaSims,numSimbolos);
+  //               posicao++;
 
-                for(m = 0; m< numSim[0]; m++ )
-                { 
-                   // printf(" AAAA FORA2 m = %d,  %s\n",m,  tabelaSims[m].simbolo.nome);
-                }
+  //               for(m = 0; m< numSim[0]; m++ )
+  //               { 
+  //                  // printf(" AAAA FORA2 m = %d,  %s\n",m,  tabelaSims[m].simbolo.nome);
+  //               }
             
-            }
-	    }
+  //           }
+	 //    }
 
 
 
-		j++;
+		 j++;
 
-		Sintese (linha, arqSaida, tabelaSims, primeiraVez);
+		//Sintese (linha, arqSaida, tabelaSims, primeiraVez);
+		Sintese (linha, arqSaida, primeiraVez);
+
+
+
+
+
 
 
 		//printf("numTokens = %d\n", linha->numTokens);
@@ -89,29 +95,9 @@ int main(int argc, char const *argv[])
 		
 	}
 
-	
+	//Sintese (linha, arqSaida, primeiraVez);
 
-
-	// listaNo = (struct Teste *) malloc(1*sizeof(struct Teste));
-
-	// pegaLista(lista, 10);
-
-	// pegaLista (listaNo, 20);
-
-	// printf("vou ligar a lista\n");
-
-	// lista->pt = listaNo;
-
-	// printf("liguei a lista com lista\n");
-
-	// getchar();
-
-	// for (int i = 0; i < 2; ++i)
-	// {
-	// 	printf("Lista = %d\n", lista->numero);
-	// 	lista = lista->pt;
-	// }
-	
+	//resolvePendencia(arqSaida,17);
 
 	fclose(ptr_file);
 

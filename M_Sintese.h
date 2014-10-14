@@ -9,7 +9,9 @@
 extern struct infoLinha *linha;
 extern struct TS *TabelaSimbolos;
 
-void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Bool primeiraVez);
+// void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Bool primeiraVez);
+void Sintese (infoLinha *linha, char *nomeArquivoSaida, _Bool primeiraVez);
+void resolvePendencia(char *nomeArquivoSaida, int posicao);
 
 struct Assembly
 {
