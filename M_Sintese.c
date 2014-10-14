@@ -6,7 +6,7 @@
 #include "M_Sintese.h"
 
 assembly* carregaMenmonicos(assembly *listaAssembly);
-assembly* insere(assembly* listaAssembly, char *mnemonico, int codigo, int tamanho);
+assembly* insereAssembly(assembly* listaAssembly, char *mnemonico, int codigo, int tamanho);
 void imprime (assembly* l);
 TS* buscaSimbolo (TS* lista, char *nome);
 assembly* buscaAssembly (assembly* lista, char *mnemonico);
@@ -15,7 +15,7 @@ assembly* buscaAssembly (assembly* lista, char *mnemonico);
 //typedef struct Assembly assembly;
 
 
-assembly* insere(assembly* listaAssembly, char *mnemonico, int codigo, int tamanho)
+assembly* insereAssembly(assembly* listaAssembly, char *mnemonico, int codigo, int tamanho)
 {
 	assembly* listaAux = (assembly*) malloc(sizeof(assembly));
 
@@ -59,11 +59,15 @@ TS* buscaSimbolo (TS* lista, char *nome)
 void imprime (assembly* l)
 {
 	assembly* p;
+	int i = 0;
 	for (p = l; p != NULL; p = p->pa)
 	{
+		printf("i = %d\n", i);
 		printf("mnemonico = %s\n", p->mnemonico);
-		printf("codigo = %d\n", p->codigo);
-		printf("tamanho = %d\n", p->tamanho);	
+		//printf("codigo = %d\n", p->codigo);
+		//printf("tamanho = %d\n", p->tamanho);	
+
+		i++;
 	}
 	
 }
@@ -88,7 +92,7 @@ assembly* carregaMenmonicos(assembly *listaAssembly)
 		mnemonico = (char*) malloc(1*sizeof(char));
 		fscanf(assembler, "%s %d %d %c", mnemonico, &codigo, &tamanho, &separador);
 
-		listaAssembly = insere(listaAssembly, mnemonico, codigo, tamanho);
+		listaAssembly = insereAssembly(listaAssembly, mnemonico, codigo, tamanho);
 
 		// printf("#####################\n");
 		// printf("imprimindo depois do insere\n");
@@ -129,8 +133,8 @@ assembly* carregaMenmonicos(assembly *listaAssembly)
 	return listaAssembly;
 }
 
-void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Bool primeiraVez)
-//int main(int argc, char const *argv[])
+// void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Bool primeiraVez)
+void Sintese (infoLinha *linha, char *nomeArquivoSaida, _Bool primeiraVez)
 {
 	_Bool status;
 	assembly *listaAssembly = NULL, *resultadoBuscaAssembly;
@@ -139,9 +143,12 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Boo
 
 	listaAssembly = carregaMenmonicos(listaAssembly);
 
+	imprime (listaAssembly);
+
 	if (primeiraVez)
 	{
 		saida = fopen(nomeArquivoSaida, "a");
+		primeiraVez = 0;
 	}
 	else
 	{
@@ -159,53 +166,46 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Boo
 		{
 			fprintf(saida, "%d ", resultadoBuscaAssembly->codigo);
 		}
-		else{
-			//se nao for instrucao ele procura na tabela de simbolo
-			resultadoBuscaSimbolo = buscaSimbolo(TabelaSimbolos, linha->Tokens[i]);
+		// else{
+		// 	//se nao for instrucao ele procura na tabela de simbolo
+		// 	resultadoBuscaSimbolo = buscaSimbolo(TabelaSimbolos, linha->Tokens[i]);
 
-			//se for um simbolo ele grava
-			if (resultadoBuscaSimbolo != NULL)
-			{
-				fprintf(saida, "%d ", resultadoBuscaSimbolo->valor);
-			}
-		}
+		// 	//se for um simbolo ele grava
+		// 	if (resultadoBuscaSimbolo != NULL)
+		// 	{
+		// 		fprintf(saida, "%d ", resultadoBuscaSimbolo->valor);
+		// 	}
+		// }
 	}
 
 
 
 
-
-
-
-
-
-
-
-
-	// Teste = busca(listaAssembly, "ADI");
-
-	// if (Teste == NULL)
-	// {
-	// 	printf("Nao achou\n");
-	// }
-	// else{
-	// 	printf("achou\n");
-	// }
-	// while(listaAssembly != NULL)
-	// {
-	// 	printf("mnemonico = %s\n", listaAssembly->mnemonico);
-	// 	printf("codigo = %d\n", listaAssembly->codigo);
-	// 	printf("tamanho = %d\n", listaAssembly->tamanho);
-	// 	printf("###################################\n\n");
-
-	// 	listaAssembly = listaAssembly->pa;
-	// }
-
-
-	//return 0;
+	fclose(saida);
 	
 }
 
+
+// void resolvePendencia(char *nomeArquivoSaida, TS *TabelaSimbolos)
+void resolvePendencia(char *nomeArquivoSaida, int posicao)
+{
+	FILE *saida;
+	int numero, contPosicao = -1;
+
+	saida = fopen (nomeArquivoSaida, "w");
+
+	while(contPosicao < posicao)
+	{
+		fscanf(saida, "%d", &numero);
+		contPosicao++;
+	}
+
+	fseek(saida, 2, SEEK_CUR);
+
+	fprintf(saida, "77");
+
+
+}
 
 
 
