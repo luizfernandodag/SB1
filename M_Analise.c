@@ -857,39 +857,7 @@ LinhaAtual[0] = 0;
     
 }
 
-
-
-void retornaTabelaSimbolos(infoLinha * linha, TS * tabelaSims,int  posicao, int * numSim)
-{
-
-    int k, m;
-    for(k = 0; k < linha->numTokens; k++)
-        {
-            printf("ABCD\n");
-            
-            if(!verificaSeInstrucao(linha->Tokens[k]) && !verificaSeDiretiva(linha->Tokens[k]) )
-            {
-                printf("ABCD2\n");
-
-                
-
-                //printf("AAA111\n");
-                //numSim[0]++;
-                //insere(TS* listaTS, int numAparicoes, int *pilhaDePosicoes, char *nome, int valor, int def, int valido)   
-                //tabelaSims =  insere( tabelaSims, linha->Tokens[k],posicao, 1,numSim );
-                printf("ABCD3\n");
-                //printTabelaSims( tabelaSims,numSimbolos);
-                //posicao[0]++;
-             
-            }
-        }
-
-
-   // return  tabelaSims; 
-
-}
-
-TS* busca (TS* lista, char *nome)
+TS* buscaTS (TS* lista, char *nome)
 {
     TS* p;
     for (p = lista; p!= NULL; p = p->prox){
@@ -901,53 +869,82 @@ TS* busca (TS* lista, char *nome)
 }
 
 
-void atualiza(TS * lista, char *nome, int pos, int valor, int def, int valido)
+void atualizaTS(TS * lista,char * nome, int pos)
 {
 
    TS * listaAUX = (TS*)malloc(sizeof(TS));
+   int definido = verificaSeDefiniToken(nome);
+   char *nomeLabel;
+   nomeLabel = (char *)malloc(strlen(nome)*sizeof(char));
+   nomeLabel = obtemNomeLabel(nome);
+    
 
-   listaAUX = busca(lista, nome);
 
-   if(listaAUX != NULL)
+   listaAUX = buscaTS(lista, nome);
+   if(definido)
    {
-
     listaAUX->numAparicoes++;
     listaAUX->pilhaDePosicoes = (int *)realloc(listaAUX->pilhaDePosicoes, listaAUX->numAparicoes*sizeof(int));
     listaAUX->pilhaDePosicoes[listaAUX->numAparicoes-1] = pos;
-    listaAUX->nome = nome;
-    listaAUX->valor = valor;
-    listaAUX->def = def;
-    listaAUX->valido = valido;
-   }
+    listaAUX->valor = pos;
+    listaAUX->def = 1;
+    listaAUX->valido = 1;//MODIFICAR AQUI DEPOIS
+    }
+    else
+    {
+    listaAUX->numAparicoes++;
+    listaAUX->pilhaDePosicoes = (int *)realloc(listaAUX->pilhaDePosicoes, (listaAUX->numAparicoes+1)*sizeof(int));
+    listaAUX->pilhaDePosicoes[listaAUX->numAparicoes] = pos;
+    listaAUX->valor = -1;
+    listaAUX->def = 0;
+    listaAUX->valido = 1;//MODIFICAR AQUI DEPOIS
+
+    }
+   
 
 }
 
 
 
 
-TS* insere(TS* listaTS, int numAparicoes, int *pilhaDePosicoes, char *nome, int valor, int def, int valido)   
+TS* insereTS(TS* listaTS,  char *nome, int pos)   
 {
     TS* listaAUX = (TS*) malloc(sizeof(TS));
-    //TS* listaAUXJaExiste = busca(listaTS, nome);
+    TS* listaAUXJaExiste = buscaTS(listaTS, nome);
+    int definido = verificaSeDefiniToken(nome);
+    printf("definido = %d string = %s",definido, nome);
+    char *nomeLabel;
 
+    if(definido)
+    {
+     nomeLabel = (char *)malloc(strlen(nome)*sizeof(char));
+     nomeLabel = obtemNomeLabel(nome);
+     listaAUX->pilhaDePosicoes = (int *)malloc(1*sizeof(int));
+     listaAUX->pilhaDePosicoes[0] = -1;
+     listaAUX->nome = nomeLabel;
+     listaAUX->valor = pos;
+     listaAUX->def = 1;
+     listaAUX->valido = 1;//MODIFICAR AQUI DEPOIS
+     listaAUX->numAparicoes = 1;
 
+     listaAUX->prox = listaTS;
 
-    // printf("#####################\n");
-    // printf("imprimindo dentro de insere\n");
-    // printf("Mnemonico = %s\n", mnemonico);
-    // imprime(listaAssembly);
-    // printf("###################\n\n");
-    //if(listaAUXJaExiste == NULL)    
-    //{
-        listaAUX->numAparicoes = numAparicoes;
-        listaAUX->pilhaDePosicoes = pilhaDePosicoes;
+    }
+    else
+    {
+        listaAUX->pilhaDePosicoes = (int *)malloc(2*sizeof(int));
+        listaAUX->pilhaDePosicoes[0] = -1;
+        listaAUX->pilhaDePosicoes[1] = pos;
         listaAUX->nome = nome;
-        listaAUX->valor = valor;
-        listaAUX->def = def;
-        listaAUX->valido = valido;
-
+        listaAUX->valor = -1;
+        listaAUX->def = 0;
+        listaAUX->valido = 1;//MODIFICAR AQUI DEPOIS
+        listaAUX->numAparicoes = 1;
         listaAUX->prox = listaTS;
 
+   }
+     
+        
         return listaAUX;
     //}
 
@@ -960,8 +957,7 @@ void printfTS(TS * lista)
   int i =  1;
 
     for (p = lista; p!= NULL; p = p->prox){
-          
-         printf("Sim = %d, nome = %s, valor = %d, def = %d, valido = %d\n, numAparicoes = %d", i, p->nome, p->valor, p->def, p->valido, p->numAparicoes );
+         printf("i = %d, nome = %s, valor = %d, def = %d, valido = %d, apari = %d, \n",i, p->nome, p->valor, p->def, p->valido, p->numAparicoes);
          i++;
 
         }
@@ -969,6 +965,64 @@ void printfTS(TS * lista)
 
 }
 
+
+
+int contaSimbolosTS(TS *lista)
+{
+    TS * p;
+    int i = 0;
+
+    for (p = lista; p!= NULL; p = p->prox){
+        
+            i++;           
+        
+    }
+    return i;
+}
+
+
+TS * retornaTabelaSimbolos(infoLinha * linha, TS * tabelaSims,int  posicao) //int * numSim)
+{   
+
+    int k, m, numSimbolosDefinidos;
+    numSimbolosDefinidos = contaSimbolosTS(tabelaSims);
+    TS *listaAUX;
+
+
+    for(k = 0; k < linha->numTokens; k++)
+        {
+     //       printf("ABCD\n");
+            
+            if(!verificaSeInstrucao(linha->Tokens[k]) && !verificaSeDiretiva(linha->Tokens[k]) )
+            {
+                //printf("ABCD2\n");
+
+                listaAUX = buscaTS(tabelaSims, linha->Tokens[k]);
+                //printf("AQUI1");
+                if(listaAUX == NULL)
+                {   
+                    tabelaSims = insereTS( tabelaSims,  linha->Tokens[k], posicao);
+                }
+                else
+                {
+                    atualizaTS( tabelaSims,  linha->Tokens[k], posicao);
+                }
+
+                //printf("AAA111\n");
+                //numSim[0]++;
+                //insere(TS* listaTS, int numAparicoes, int *pilhaDePosicoes, char *nome, int valor, int def, int valido)   
+                //tabelaSims =  insere( tabelaSims, linha->Tokens[k],posicao, 1,numSim );
+                //printf("ABCD3\n");
+                //printTabelaSims( tabelaSims,numSimbolos);
+                //posicao[0]++;
+                
+            }
+        }
+
+
+    return  tabelaSims; 
+
+}
 
 
 

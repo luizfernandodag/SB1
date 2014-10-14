@@ -13,7 +13,8 @@ int main(int argc, char const *argv[])
 	infoLinha *linha;
 	FILE *ptr_file;
 	int i =0,j = 1, k, fim,m, posicao = 1;
-	TS * tabelaSims = (TS *)malloc(sizeof(TS));
+	TS * tabelaSims = NULL;
+	//tabelaSims = NULL;
 	int * numSim;
 	numSim = (int *)malloc(1*sizeof(int));
 	numSim[0] = 0;
@@ -21,7 +22,7 @@ int main(int argc, char const *argv[])
 	ptr_file =fopen(argv[1],"r");
 
     if (!ptr_file)
-    {
+    { 
         return 1;
 	}
 
@@ -39,11 +40,12 @@ int main(int argc, char const *argv[])
 		}
 
 		EscreveNumLinha(linha, j);
-		retornaTabelaSimbolos(linha, tabelaSims,  posicao,  numSim);
+		tabelaSims = retornaTabelaSimbolos(linha, tabelaSims,  posicao);
+		//printfTS(tabelaSims);
         
+//retornaTabelaSimbolos(infoLinha * linha, TS * tabelaSims,int  posicao) //int * numSim)
 
-
-		j++;
+		posicao++;
 
 		//printf("numTokens = %d\n", linha->numTokens);
 		//printf("numChars  = %d\n", linha->numChars);
@@ -59,7 +61,7 @@ int main(int argc, char const *argv[])
 		
 	}
 
-	
+	printfTS(tabelaSims);
 
 
 	// listaNo = (struct Teste *) malloc(1*sizeof(struct Teste));
