@@ -12,18 +12,10 @@ TS* buscaSimbolo (TS* lista, char *nome);
 assembly* buscaAssembly (assembly* lista, char *mnemonico);
 
 
-//typedef struct Assembly assembly;
-
-
+//função que insere os mnemonicos de assembly em uma lista encadeada
 assembly* insereAssembly(assembly* listaAssembly, char *mnemonico, int codigo, int tamanho)
 {
 	assembly* listaAux = (assembly*) malloc(sizeof(assembly));
-
-	// printf("#####################\n");
-	// printf("imprimindo dentro de insere\n");
-	// printf("Mnemonico = %s\n", mnemonico);
-	// imprime(listaAssembly);
-	// printf("###################\n\n");
 
 	listaAux->mnemonico = mnemonico;
 	listaAux->codigo = codigo;
@@ -34,6 +26,7 @@ assembly* insereAssembly(assembly* listaAssembly, char *mnemonico, int codigo, i
 	return listaAux;
 }
 
+//funcao que busca na lista de mnemonicos assembly o mnemonico que eu quero
 assembly* buscaAssembly (assembly* lista, char *mnemonico)
 {
 	assembly* p;
@@ -45,6 +38,7 @@ assembly* buscaAssembly (assembly* lista, char *mnemonico)
  	return NULL;
 }
 
+//funcao busca na tabela de simbolos o simbolo que eu quero
 TS* buscaSimbolo (TS* lista, char *nome)
 {
 	TS* p;
@@ -56,6 +50,7 @@ TS* buscaSimbolo (TS* lista, char *nome)
  	return NULL;
 }
 
+//função cujo motivo principal é o debug, pois imprimi na tela a lista encadeada
 void imprime (assembly* l)
 {
 	assembly* p;
@@ -64,14 +59,15 @@ void imprime (assembly* l)
 	{
 		printf("i = %d\n", i);
 		printf("mnemonico = %s\n", p->mnemonico);
-		//printf("codigo = %d\n", p->codigo);
-		//printf("tamanho = %d\n", p->tamanho);	
+		printf("codigo = %d\n", p->codigo);
+		printf("tamanho = %d\n", p->tamanho);	
 
 		i++;
 	}
 	
 }
 
+//funcao principal que constroi a lista encadeada de mnemonicos
 assembly* carregaMenmonicos(assembly *listaAssembly)
 {
 	FILE *assembler;
@@ -82,11 +78,8 @@ assembly* carregaMenmonicos(assembly *listaAssembly)
 	int codigo;
 	int tamanho;
 
-	
-
 	assembler = fopen("assembly.txt", "r");
 
-	printf("abri aqrquivo\n");
 	while(!feof(assembler))
 	{
 		mnemonico = (char*) malloc(1*sizeof(char));
@@ -133,6 +126,7 @@ assembly* carregaMenmonicos(assembly *listaAssembly)
 	return listaAssembly;
 }
 
+//funcao principal do modulo que gera o cógigo objeto, porem ainda não resolve as pendencias
 // void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Bool primeiraVez)
 void Sintese (infoLinha *linha, char *nomeArquivoSaida, _Bool primeiraVez)
 {
@@ -143,7 +137,7 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, _Bool primeiraVez)
 
 	listaAssembly = carregaMenmonicos(listaAssembly);
 
-	imprime (listaAssembly);
+	//imprime (listaAssembly);
 
 	if (primeiraVez)
 	{
@@ -185,38 +179,30 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, _Bool primeiraVez)
 	
 }
 
-
+//funcao que resolve as pensadencias da tabela de simbolos
 // void resolvePendencia(char *nomeArquivoSaida, TS *TabelaSimbolos)
 void resolvePendencia(char *nomeArquivoSaida, int posicao)
 {
 	FILE *saida;
-	int numero, contPosicao = -1;
+	int numero, contPosicao = 0;
 
-	saida = fopen (nomeArquivoSaida, "w");
+	saida = fopen (nomeArquivoSaida, "r+");
 
 	while(contPosicao < posicao)
 	{
 		fscanf(saida, "%d", &numero);
 		contPosicao++;
+		//printf("Numero = %d\n", numero);
 	}
 
-	fseek(saida, 2, SEEK_CUR);
+	fseek(saida, 1, SEEK_CUR);
 
 	fprintf(saida, "77");
 
+	fclose(saida);
 
 }
 
 
-
-// void pegaLista(struct Teste *lista, int numero)
-// {
-// 	// lista = (struct Teste *) malloc(1*sizeof(struct Teste));
-
-// 	lista->numero = numero;
-
-// 	printf("lista = %d\n", lista->numero);
-
-// }
 
 
