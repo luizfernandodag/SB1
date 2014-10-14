@@ -8,7 +8,8 @@
 assembly* carregaMenmonicos(assembly *listaAssembly);
 assembly* insere(assembly* listaAssembly, char *mnemonico, int codigo, int tamanho);
 void imprime (assembly* l);
-assembly* busca (assembly* lista, char *mnemonico);
+TS* buscaSimbolo (TS* lista, char *nome);
+assembly* buscaAssembly (assembly* lista, char *mnemonico);
 
 
 //typedef struct Assembly assembly;
@@ -33,11 +34,22 @@ assembly* insere(assembly* listaAssembly, char *mnemonico, int codigo, int taman
 	return listaAux;
 }
 
-assembly* busca (assembly* lista, char *mnemonico)
+assembly* buscaAssembly (assembly* lista, char *mnemonico)
 {
 	assembly* p;
  	for (p = lista; p!= NULL; p = p->pa){
  		if (!strcmp(p->mnemonico, mnemonico)){
+ 			return p;			
+ 		}		
+ 	}
+ 	return NULL;
+}
+
+TS* buscaSimbolo (TS* lista, char *nome)
+{
+	TS* p;
+ 	for (p = lista; p!= NULL; p = p->prox){
+ 		if (!strcmp(p->nome, nome)){
  			return p;			
  		}		
  	}
@@ -117,23 +129,68 @@ assembly* carregaMenmonicos(assembly *listaAssembly)
 	return listaAssembly;
 }
 
-//void Sintese (infoLinha *linha, char *nomeArquivoSaida)
-int main(int argc, char const *argv[])
+void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Bool primeiraVez)
+//int main(int argc, char const *argv[])
 {
 	_Bool status;
-	assembly *listaAssembly = NULL, *Teste;
+	assembly *listaAssembly = NULL, *resultadoBuscaAssembly;
+	TS *resultadoBuscaSimbolo;
+	FILE *saida;
 
 	listaAssembly = carregaMenmonicos(listaAssembly);
 
-	Teste = busca(listaAssembly, "ADI");
-
-	if (Teste == NULL)
+	if (primeiraVez)
 	{
-		printf("Nao achou\n");
+		saida = fopen(nomeArquivoSaida, "a");
 	}
-	else{
-		printf("achou\n");
+	else
+	{
+		saida = fopen (nomeArquivoSaida, "w");
 	}
+	
+
+	for (int i = 0; i < linha->numTokens; ++i)
+	{	
+		//verifica se o simbolo é uma instrucao de assembly
+		resultadoBuscaAssembly = buscaAssembly(listaAssembly, linha->Tokens[i]);
+
+		//se o simbolo for uma instrucao ele grava
+		if (resultadoBuscaAssembly != NULL)
+		{
+			fprintf(saida, "%d ", resultadoBuscaAssembly->codigo);
+		}
+		else{
+			//se nao for instrucao ele procura na tabela de simbolo
+			resultadoBuscaSimbolo = buscaSimbolo(TabelaSimbolos, linha->Tokens[i]);
+
+			//se for um simbolo ele grava
+			if (resultadoBuscaSimbolo != NULL)
+			{
+				fprintf(saida, "%d ", resultadoBuscaSimbolo->valor);
+			}
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+	// Teste = busca(listaAssembly, "ADI");
+
+	// if (Teste == NULL)
+	// {
+	// 	printf("Nao achou\n");
+	// }
+	// else{
+	// 	printf("achou\n");
+	// }
 	// while(listaAssembly != NULL)
 	// {
 	// 	printf("mnemonico = %s\n", listaAssembly->mnemonico);
@@ -145,7 +202,7 @@ int main(int argc, char const *argv[])
 	// }
 
 
-	return 0;
+	//return 0;
 	
 }
 

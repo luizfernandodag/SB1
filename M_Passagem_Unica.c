@@ -11,9 +11,11 @@
 
 int main(int argc, char const *argv[])
 {
+	char arqSaida[] = "SAIDA.txt";
+
 	infoLinha *linha;
 	FILE *ptr_file;
-	int i =0,j = 1, k, fim,m, posicao = 1;
+	int i =0,j = 1, k, fim,m, posicao = 1, primeiraVez = 1;
 	TS * tabelaSims = NULL;
 	int * numSim;
 	numSim = (int *)malloc(1*sizeof(int));
@@ -60,7 +62,7 @@ int main(int argc, char const *argv[])
 
                 for(m = 0; m< numSim[0]; m++ )
                 { 
-                    printf(" AAAA FORA2 m = %d,  %s\n",m,  tabelaSims[m].simbolo.nome);
+                   // printf(" AAAA FORA2 m = %d,  %s\n",m,  tabelaSims[m].simbolo.nome);
                 }
             
             }
@@ -69,6 +71,9 @@ int main(int argc, char const *argv[])
 
 
 		j++;
+
+		Sintese (linha, arqSaida, tabelaSims, primeiraVez);
+
 
 		//printf("numTokens = %d\n", linha->numTokens);
 		//printf("numChars  = %d\n", linha->numChars);
