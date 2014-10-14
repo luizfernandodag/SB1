@@ -5,6 +5,7 @@
 #define NumDire 7
 
 #include "M_Analise.h"
+#include "testeLuiz.h"
 
 
 // typedef struct 
@@ -357,7 +358,7 @@ return errosInfo;
 
 
 
-TS * insereLinhaTab (TS * tabSim,infoLinha Linha, int NumSim)
+/*TS * insereLinhaTab (TS * tabSim,infoLinha Linha, int NumSim)
 {
     int i = 0;
 
@@ -374,7 +375,7 @@ TS * insereLinhaTab (TS * tabSim,infoLinha Linha, int NumSim)
     }
 
     return tabSim;
-}
+}*/
 /*
 char * lerToken(FILE *ptr_file, int j)
 
@@ -532,7 +533,7 @@ int lerLinha(FILE *ptr_file, fpos_t  pos,int * LinhaAtual ,infoLinha * Linhas)
 
 }
 
-int procuraSimboloTS(char * Token, TS * tabelaSims, int * numSimbolos)
+/*int procuraSimboloTS(char * Token, TS * tabelaSims, int * numSimbolos)
 {
     int pos = -1;
     int i;
@@ -675,7 +676,7 @@ TS * insereSimbolo(TS * tabelaSims, char * Token,int Val, int valido, int * numS
 
     //printTabelaSims( tabelaSims,  numSimbolos);
     return tabelaSims;
-}
+}*/
 
 
 
@@ -856,6 +857,117 @@ LinhaAtual[0] = 0;
     
 }
 
+
+
+void retornaTabelaSimbolos(infoLinha * linha, TS * tabelaSims,int  posicao, int * numSim)
+{
+
+    int k, m;
+    for(k = 0; k < linha->numTokens; k++)
+        {
+            printf("ABCD\n");
+            
+            if(!verificaSeInstrucao(linha->Tokens[k]) && !verificaSeDiretiva(linha->Tokens[k]) )
+            {
+                printf("ABCD2\n");
+
+                
+
+                //printf("AAA111\n");
+                //numSim[0]++;
+                //insere(TS* listaTS, int numAparicoes, int *pilhaDePosicoes, char *nome, int valor, int def, int valido)   
+                //tabelaSims =  insere( tabelaSims, linha->Tokens[k],posicao, 1,numSim );
+                printf("ABCD3\n");
+                //printTabelaSims( tabelaSims,numSimbolos);
+                //posicao[0]++;
+             
+            }
+        }
+
+
+   // return  tabelaSims; 
+
+}
+
+TS* busca (TS* lista, char *nome)
+{
+    TS* p;
+    for (p = lista; p!= NULL; p = p->prox){
+        if (!strcmp(p->nome, nome)){
+            return p;           
+        }       
+    }
+    return NULL;
+}
+
+
+void atualiza(TS * lista, char *nome, int pos, int valor, int def, int valido)
+{
+
+   TS * listaAUX = (TS*)malloc(sizeof(TS));
+
+   listaAUX = busca(lista, nome);
+
+   if(listaAUX != NULL)
+   {
+
+    listaAUX->numAparicoes++;
+    listaAUX->pilhaDePosicoes = (int *)realloc(listaAUX->pilhaDePosicoes, listaAUX->numAparicoes*sizeof(int));
+    listaAUX->pilhaDePosicoes[listaAUX->numAparicoes-1] = pos;
+    listaAUX->nome = nome;
+    listaAUX->valor = valor;
+    listaAUX->def = def;
+    listaAUX->valido = valido;
+   }
+
+}
+
+
+
+
+TS* insere(TS* listaTS, int numAparicoes, int *pilhaDePosicoes, char *nome, int valor, int def, int valido)   
+{
+    TS* listaAUX = (TS*) malloc(sizeof(TS));
+    //TS* listaAUXJaExiste = busca(listaTS, nome);
+
+
+
+    // printf("#####################\n");
+    // printf("imprimindo dentro de insere\n");
+    // printf("Mnemonico = %s\n", mnemonico);
+    // imprime(listaAssembly);
+    // printf("###################\n\n");
+    //if(listaAUXJaExiste == NULL)    
+    //{
+        listaAUX->numAparicoes = numAparicoes;
+        listaAUX->pilhaDePosicoes = pilhaDePosicoes;
+        listaAUX->nome = nome;
+        listaAUX->valor = valor;
+        listaAUX->def = def;
+        listaAUX->valido = valido;
+
+        listaAUX->prox = listaTS;
+
+        return listaAUX;
+    //}
+
+}
+
+void printfTS(TS * lista)
+{
+
+  TS* p;
+  int i =  1;
+
+    for (p = lista; p!= NULL; p = p->prox){
+          
+         printf("Sim = %d, nome = %s, valor = %d, def = %d, valido = %d\n, numAparicoes = %d", i, p->nome, p->valor, p->def, p->valido, p->numAparicoes );
+         i++;
+
+        }
+    
+
+}
 
 
 

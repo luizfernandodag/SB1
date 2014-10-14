@@ -3,7 +3,7 @@
 #include <math.h>
 #include <string.h>
 #include "M_Sintese.h"
-#include "M_Passagem_Unica.h"
+#include "testeLuiz.h"
 #include "M_Analise.h"
 
 
@@ -13,7 +13,7 @@ int main(int argc, char const *argv[])
 	infoLinha *linha;
 	FILE *ptr_file;
 	int i =0,j = 1, k, fim,m, posicao = 1;
-	TS * tabelaSims = NULL;
+	TS * tabelaSims = (TS *)malloc(sizeof(TS));
 	int * numSim;
 	numSim = (int *)malloc(1*sizeof(int));
 	numSim[0] = 0;
@@ -39,32 +39,8 @@ int main(int argc, char const *argv[])
 		}
 
 		EscreveNumLinha(linha, j);
-
-        for(k = 0; k < linha->numTokens; k++)
-        {
-        	printf("ABCD\n");
-			
-			if(!verificaSeInstrucao(linha->Tokens[k]) && !verificaSeDiretiva(linha->Tokens[k]) )
-            {
-            	printf("ABCD2\n");
-
-            	
-
-                //printf("AAA111\n");
-                //numSim[0]++;
-                tabelaSims =  insereSimbolo( tabelaSims, linha->Tokens[k],posicao, 1,numSim );
-                printf("ABCD3\n");
-                //printTabelaSims( tabelaSims,numSimbolos);
-                posicao++;
-
-                for(m = 0; m< numSim[0]; m++ )
-                { 
-                    printf(" AAAA FORA2 m = %d,  %s\n",m,  tabelaSims[m].simbolo.nome);
-                }
-            
-            }
-	    }
-
+		retornaTabelaSimbolos(linha, tabelaSims,  posicao,  numSim);
+        
 
 
 		j++;
