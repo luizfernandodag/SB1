@@ -12,7 +12,10 @@ int main(int argc, char const *argv[])
 {
 	infoLinha *linha;
 	FILE *ptr_file;
-	int i =0,j = 1, k, fim,m, posicao = 1;
+	int i =0,j = 1, k, fim,m;
+	int posicao;
+	//posicao = (int*)malloc(1*sizeof(int));
+	posicao = 0;
 	TS * tabelaSims = NULL;
 	//tabelaSims = NULL;
 	int * numSim;
@@ -44,8 +47,11 @@ int main(int argc, char const *argv[])
 		//printfTS(tabelaSims);
         
 //retornaTabelaSimbolos(infoLinha * linha, TS * tabelaSims,int  posicao) //int * numSim)
-
-		posicao++;
+		//printf("POS  entrei = %d\n",posicao);
+        if(!verificaSections(linha))
+		posicao+= linha->numTokens;
+        //printf("POS sai = %d\n",posicao);
+       
 
 		//printf("numTokens = %d\n", linha->numTokens);
 		//printf("numChars  = %d\n", linha->numChars);

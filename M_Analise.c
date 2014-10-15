@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #define NumInstr 14
-#define NumDire 7
+#define NumDire 9
 
 #include "M_Analise.h"
 #include "testeLuiz.h"
@@ -56,23 +56,34 @@ int verificaSeDefiniToken(char * Token)
 {
 
     int i = strlen(Token);
+/*int j;
+printf("strlen = %d \n",i);
+for(j = 0; j<=i; j++)
+{
+    printf("j = %d c = %c\n", j,Token[j]);
+}*/
 
     if(Token[i-1]==':')
+    {
+        
         return 1;
+    }
     else
+    {
         return 0;
+    }
 }
 
 char * obtemNomeLabel(char * Token)
 {
    int i;
 
-    if(verificaSeDefiniToken)
+    if(verificaSeDefiniToken(Token))
     { 
-        int size = strlen(Token) - 1;
+        int size = strlen(Token);
         char * stringOut = (char *)malloc(size*sizeof(char));
 
-        for ( i = 0; i < size; i++)
+        for ( i = 0; i < size-1; i++)
         {
             stringOut[i] = Token[i];
         }
@@ -141,6 +152,9 @@ void ini(infoLinha * Linhas)
     diretivas[4] = "IF";
     diretivas[5] = "MACRO";
     diretivas[6] = "END";
+    diretivas[7] = "DATA";
+    diretivas[8] = "TEXT";
+
     
     //simbolos = (ListaSim *)realloc(simbolos, 1*sizeof(ListaSim);
     
@@ -287,7 +301,7 @@ void printErros(erros *errosInfo, int * NumErros)
 
 
 
-erros * verificaToken(char * Token, int linha,erros *errosInfo, int * NumErros, int posLinha  )
+int verificaErroToken(char * Token, int posicao )
 {
    int i, size, ehInstrucao, ehDiretiva;
    char c;
@@ -309,12 +323,8 @@ erros * verificaToken(char * Token, int linha,erros *errosInfo, int * NumErros, 
             
             if(!(isalpha(c) || c == '_') || isdigit(c) )
             {
-               //printf("\nAqui 1 ERROOOOOOOOOOOOOO \n");
-               errosInfo = (erros *)realloc(errosInfo, (NumErros[0]+1)*sizeof(erros));
-               errosInfo[NumErros[0]+1].NumLinha = linha;
-               errosInfo[NumErros[0]+1].TipoErro = 1; // 1 =Erro Lexico
-               NumErros[0]++;
-
+                return 0;            
+   
             }
             
 
@@ -325,11 +335,7 @@ erros * verificaToken(char * Token, int linha,erros *errosInfo, int * NumErros, 
             {
                 if(!( isalpha(c) || isdigit(c) || c == '_' || c == ':'))
                 {
-                  //  printf("\nAqui 2 ERROOOOOOOOOOOOOO \n");
-                    errosInfo = (erros *)realloc(errosInfo, (NumErros[0]+1)*sizeof(erros));   
-                    errosInfo[NumErros[0]+1].NumLinha = linha;
-                    errosInfo[NumErros[0]+1].TipoErro = 1; // 1 =Erro Lexico
-                    NumErros[0]++;
+                    return 0;
                 }   
 
         
@@ -338,12 +344,7 @@ erros * verificaToken(char * Token, int linha,erros *errosInfo, int * NumErros, 
             {
                 if((c != '_') || (c != ':') ) 
                 {
-                    //printf("\nAqui 3 ERROOOOOOOOOOOOOO \n");
-
-                    errosInfo = (erros *)realloc(errosInfo, (NumErros[0]+1)*sizeof(erros));   
-                    errosInfo[NumErros[0]+1].NumLinha = linha;
-                    errosInfo[NumErros[0]+1].TipoErro = 1; // 1 =Erro Lexico
-                    NumErros[0]++;
+                    return 0;
                 }
             }
        }
@@ -352,7 +353,7 @@ erros * verificaToken(char * Token, int linha,erros *errosInfo, int * NumErros, 
    }
 
   // printf("77777AAA\n");
-return errosInfo;
+return 1;
    
 }
 
@@ -533,150 +534,6 @@ int lerLinha(FILE *ptr_file, fpos_t  pos,int * LinhaAtual ,infoLinha * Linhas)
 
 }
 
-/*int procuraSimboloTS(char * Token, TS * tabelaSims, int * numSimbolos)
-{
-    int pos = -1;
-    int i;
-
-    printf("procuraSimboloTS 1\n");
-    if(tabelaSims != NULL)
-    for (i = 0; i < numSimbolos[0] ; i++)
-    {printf("procuraSimboloTS 2\n");
-        if(!strcmp(Token, tabelaSims[i].simbolo.nome))
-         {
-            printf("verifica TOKEN = %s, Tabela = %s, pos = %d\n", Token,tabelaSims[i].simbolo.nome, i );
-            pos = i;
-         }
-    }
-    printf("procuraSimboloTS 3 pos = %d\n", pos);
-
-    return pos;
-
-
-}
-
-void printTabelaSims(TS * tabelaSims, int * numSimbolos)
-{
-    int i, j;
-   printf("\n\n");
-    for(i = 0; i< numSimbolos[0]; i++ )
-    {
-        printf(" i = %d,  %s, numAparicoes = %d , pilhaDePosicoes = ",i,  tabelaSims[i].simbolo.nome, tabelaSims[i].simbolo.numAparicoes );
-        for(j = 0; j < tabelaSims[i].simbolo.numAparicoes; j++)
-        {
-        printf(" %d ",tabelaSims[i].simbolo.pilhaDePosicoes[j] );
-        }
-
-        //printf("\n");
-        printf("DEF = %d VALIDO = %d\n", tabelaSims[i].def, tabelaSims[i].valido );
-
-
-    }
-}
-
-
-TS * insereSimbolo(TS * tabelaSims, char * Token,int Val, int valido, int * numSimbolos )
-{   
-
-    int i, j, pos;
-    //if(procuraSimboloTS(Token) != -1 )
-    printf("AQUI1\n");
-    pos = procuraSimboloTS(Token, tabelaSims, numSimbolos); 
-    printf("AQUI2\n");
-    //if(numSimbolos)
-   // printf("i = %d, numSimbolos = %d \n", i, numSimbolos[0]);
-    printf("AAAA2222\n");
-    if( pos == -1)
-    {
-        numSimbolos[0]++;
-        i =numSimbolos[0] - 1;
-        printf("AAAA88888\n");
-        tabelaSims = (TS *)realloc(tabelaSims, numSimbolos[0]*sizeof(TS));
-        printf("AAAA3333\n");
-      
-
-        tabelaSims[i].simbolo.nome = (char *)malloc(strlen(Token)*sizeof(char));
-        tabelaSims[i].simbolo.nome = Token;
-        tabelaSims[i].simbolo.nome[strlen(Token)] = '\0';
-        printf("\n");
-          for(j = 0; j< numSimbolos[0]; j++ )
-         { 
-          printf(" DENTRO j = %d,  %s\n",j,  tabelaSims[j].simbolo.nome);
-         }
-
-        //printf("\n");
-        
-
-
-    
-
-        printf("AAAA44444\n");
-        
-        tabelaSims[i].simbolo.numAparicoes = 1;
-        if(!verificaSeDefiniToken(Token))
-        {
-            tabelaSims[i].simbolo.pilhaDePosicoes = NULL;//SERA????
-            tabelaSims[i].simbolo.pilhaDePosicoes = (int *)realloc(tabelaSims[i].simbolo.pilhaDePosicoes, ( tabelaSims[i].simbolo.numAparicoes +1 )*sizeof(int));
-            tabelaSims[i].simbolo.pilhaDePosicoes[0] = -1;
-            tabelaSims[i].simbolo.pilhaDePosicoes[1] = Val;
-            tabelaSims[i].def = 0;
-          //  printf("AAAA55555\n");
-          //  printf("nome = %s, numSimbolos = %d, val = %d, def = %d\n",tabelaSims[i].simbolo.nome, numSimbolos[0], tabelaSims[i].simbolo.pilhaDePosicoes[1], tabelaSims[i].def   );
-        }
-        else
-        {
-            tabelaSims[i].simbolo.pilhaDePosicoes = NULL;//SERA????
-            tabelaSims[i].simbolo.pilhaDePosicoes = (int *)realloc(tabelaSims[i].simbolo.pilhaDePosicoes, (tabelaSims[i].simbolo.numAparicoes )*sizeof(int));
-            tabelaSims[i].simbolo.pilhaDePosicoes[0] = -1;
-            tabelaSims[i].valor = Val;
-            tabelaSims[i].def= 1;
-            //printf("nome = %s, numSimbolos = %d, val = %d, def = %d\n",tabelaSims[i].simbolo.nome, numSimbolos[0], tabelaSims[i].simbolo.pilhaDePosicoes[1], tabelaSims[i].def   );
-            //printf("AAAA6666\n");    
-
-
-        }
-
-        //tabelaSims[i].valor = Val;
-
-       // printf("AAAA77777\n");
-        tabelaSims[i].valido = valido;
-
-        printTabelaSims( tabelaSims,  numSimbolos);
-
-    }
-    else
-    {
-
-     printf("ELSE 11111\n");
-        int topoPilhaPosicoes;
-        tabelaSims[pos].simbolo.numAparicoes++;
-        topoPilhaPosicoes = tabelaSims[pos].simbolo.numAparicoes;
-//        printf("AAAA88888\n");
-        printf("ELSE 22222\n");
-
-        if(!verificaSeDefiniToken(Token))
-        {
-            //tabelaSims[i].simbolo.pilhaDePosicoes = NULL;//SERA????
-            tabelaSims[pos].simbolo.pilhaDePosicoes = (int *)realloc(tabelaSims[i].simbolo.pilhaDePosicoes, ( tabelaSims[i].simbolo.numAparicoes +1 )*sizeof(int));
-            tabelaSims[pos].simbolo.pilhaDePosicoes[topoPilhaPosicoes + 1] = Val;
-            printf("ELSE 33333\n");
-        }
-        else
-        {
-            tabelaSims[pos].def= 1;    
-            tabelaSims[pos].valor = Val;
-            printf("ELSE 4444\n");
-
-        }
-
-
-  //      printf("AAAA99999\n");
-    }
-//printf("AAAA3333\n");
-
-    //printTabelaSims( tabelaSims,  numSimbolos);
-    return tabelaSims;
-}*/
 
 
 
@@ -711,17 +568,6 @@ int LerArquivo( FILE *ptr_file, fpos_t  pos,int * LinhaAtual, infoLinha * Linhas
 
             if(!verificaSeInstrucao(Linhas->Tokens[j]) && !verificaSeDiretiva(Linhas->Tokens[j]) )
             {
-                //printf("\n %s nao eh instrucao nem diretiva", Linhas[i].Tokens[j]);
-                //printf("EEEEEEERRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOO\n");
-                //numSimbolos[0]++;
-                errosInfo =  verificaToken(Linhas->Tokens[j], i  , errosInfo, NumErros,j  );
-                printErros(errosInfo, NumErros);
-
-
-                //printf("AAA111\n");
-                //tabelaSims =  insereSimbolo( tabelaSims, Linhas->Tokens[j],posicao, 1,numSimbolos );
-                
-                //printTabelaSims( tabelaSims,numSimbolos);
                 
 
                 
@@ -855,6 +701,7 @@ LinhaAtual[0] = 0;
     
     return fim;
     
+
 }
 
 TS* buscaTS (TS* lista, char *nome)
@@ -869,38 +716,77 @@ TS* buscaTS (TS* lista, char *nome)
 }
 
 
+
+void printfPilhaPos(pilhaPos * lista)
+{
+
+  pilhaPos* p;
+  int i =  0, j;
+
+    for (p = lista; p!= NULL; p = p->pilhaPosProx){
+         i++;
+        }
+}
+
+
+
+pilhaPos * inserePilhaPos(pilhaPos* p, int posicao)
+{
+    pilhaPos* pilhaAUX = (pilhaPos*) malloc(sizeof(pilhaPos));
+
+    
+    pilhaAUX->pos = posicao;
+    pilhaAUX->pilhaPosProx = p;
+
+    return pilhaAUX;
+}
+
 void atualizaTS(TS * lista,char * nome, int pos)
 {
 
    TS * listaAUX = (TS*)malloc(sizeof(TS));
+
    int definido = verificaSeDefiniToken(nome);
    char *nomeLabel;
    nomeLabel = (char *)malloc(strlen(nome)*sizeof(char));
    nomeLabel = obtemNomeLabel(nome);
-    
-
-
-   listaAUX = buscaTS(lista, nome);
+  // printf("nome = %s, nomeLabel = %s\n", nome, nomeLabel );
+//   int ap = contaNumAparicoes(lista);
+        
+//printf("ap1 = %d\n",ap ); 
+   listaAUX = buscaTS(lista, nomeLabel);
    if(definido)
    {
-    listaAUX->numAparicoes++;
-    listaAUX->pilhaDePosicoes = (int *)realloc(listaAUX->pilhaDePosicoes, listaAUX->numAparicoes*sizeof(int));
-    listaAUX->pilhaDePosicoes[listaAUX->numAparicoes-1] = pos;
+//printf("DEFINI ATUALIZA \n");
+//printf("nome = %s\n", nome );
+
+    //printf("BBBBBBB\n ");
+    //listaAUX->numAparicoes++;
+    //listaAUX->pilhaDePosicoes = (int *)realloc(listaAUX->pilhaDePosicoes, (listaAUX->numAparicoes)*sizeof(int));
+    //listaAUX->pilhaDePosicoes[listaAUX->numAparicoes] = pos;
+    //printf("CCCCC\n");
     listaAUX->valor = pos;
+    //printf("AAAAA\n");
     listaAUX->def = 1;
-    listaAUX->valido = 1;//MODIFICAR AQUI DEPOIS
+    //printf("AAAAABBBBB\n");
+    //listaAUX->valido = 1;//MODIFICAR AQUI DEPOIS
+    //printf("AAAAACCCCC\n");
     }
     else
     {
+     //   printf("NAO DEFINI ATUALIZA \n"); 
     listaAUX->numAparicoes++;
-    listaAUX->pilhaDePosicoes = (int *)realloc(listaAUX->pilhaDePosicoes, (listaAUX->numAparicoes+1)*sizeof(int));
-    listaAUX->pilhaDePosicoes[listaAUX->numAparicoes] = pos;
-    listaAUX->valor = -1;
-    listaAUX->def = 0;
-    listaAUX->valido = 1;//MODIFICAR AQUI DEPOIS
+
+    listaAUX->pilhaDePosicoes = inserePilhaPos(lista->pilhaDePosicoes, pos);
+    //listaAUX->valor = -1;
+    //listaAUX->def = 0;
+    //listaAUX->valido = 1;//MODIFICAR AQUI DEPOIS
 
     }
-   
+  //     ap = contaNumAparicoes(lista);
+  //     int ap2= contaNumAparicoes(listaAUX);
+  //printf("ap2 = %d,ap3 = %d\n",ap, ap2 ); 
+
 
 }
 
@@ -911,20 +797,28 @@ TS* insereTS(TS* listaTS,  char *nome, int pos)
 {
     TS* listaAUX = (TS*) malloc(sizeof(TS));
     TS* listaAUXJaExiste = buscaTS(listaTS, nome);
-    int definido = verificaSeDefiniToken(nome);
-    printf("definido = %d string = %s",definido, nome);
     char *nomeLabel;
+    pilhaPos *pilha = NULL;
 
-    if(definido)
+    nomeLabel = (char *)malloc(strlen(nome)*sizeof(char));
+    nomeLabel = obtemNomeLabel(nome);
+     
+    //nomeLabel = obtemNomeLabel(nome);
+    //printf("Aqui\n");
+
+    int defini = verificaSeDefiniToken(nome);
+    //printf("definido = %d string = %s",definido, nome);
+    //printf("defini = %d, nome = %s, nomeLabel = %s\n",defini, nome, nomeLabel);
+
+    if(defini)
     {
-     nomeLabel = (char *)malloc(strlen(nome)*sizeof(char));
-     nomeLabel = obtemNomeLabel(nome);
-     listaAUX->pilhaDePosicoes = (int *)malloc(1*sizeof(int));
-     listaAUX->pilhaDePosicoes[0] = -1;
+     
+    //printf("DEFINI INSERE \n"); 
+     listaAUX->pilhaDePosicoes = pilha;
      listaAUX->nome = nomeLabel;
      listaAUX->valor = pos;
      listaAUX->def = 1;
-     listaAUX->valido = 1;//MODIFICAR AQUI DEPOIS
+     listaAUX->valido = verificaErroToken(nomeLabel,pos);//MODIFICAR AQUI DEPOIS
      listaAUX->numAparicoes = 1;
 
      listaAUX->prox = listaTS;
@@ -932,18 +826,20 @@ TS* insereTS(TS* listaTS,  char *nome, int pos)
     }
     else
     {
-        listaAUX->pilhaDePosicoes = (int *)malloc(2*sizeof(int));
-        listaAUX->pilhaDePosicoes[0] = -1;
-        listaAUX->pilhaDePosicoes[1] = pos;
+
+        //printf("NAO DEFINI INSERE \n"); 
+        listaAUX->pilhaDePosicoes = inserePilhaPos(pilha, pos);
         listaAUX->nome = nome;
         listaAUX->valor = -1;
         listaAUX->def = 0;
-        listaAUX->valido = 1;//MODIFICAR AQUI DEPOIS
-        listaAUX->numAparicoes = 1;
+        listaAUX->valido = verificaErroToken(nome,pos);;//MODIFICAR AQUI DEPOIS
+        listaAUX->numAparicoes = 2;
         listaAUX->prox = listaTS;
 
    }
-     
+
+   //int ap = contaNumAparicoes(listaAUX);
+   // printf("ap = %d\n",ap ); 
         
         return listaAUX;
     //}
@@ -954,11 +850,16 @@ void printfTS(TS * lista)
 {
 
   TS* p;
-  int i =  1;
+  int i =  1, j;
 
     for (p = lista; p!= NULL; p = p->prox){
          printf("i = %d, nome = %s, valor = %d, def = %d, valido = %d, apari = %d, \n",i, p->nome, p->valor, p->def, p->valido, p->numAparicoes);
          i++;
+// for (j = 0; i < p->numAparicoes; ++i)
+// {
+//     /* code */
+// }
+
 
         }
     
@@ -980,6 +881,27 @@ int contaSimbolosTS(TS *lista)
     return i;
 }
 
+int verificaSections(infoLinha *linha)
+{
+
+    //printf("TOKEN[0] = %s, TOKEN[1] = %s\n",linha->Tokens[0], linha->Tokens[1] );
+    //if(linha->numTokens == 2)
+    //{
+      //  printf("AQUI 1");
+        if(!strcmp( maiuscula(linha->Tokens[0]), "SECTION")){
+        //    printf("AQUI 2");
+            if(!strcmp( maiuscula(linha->Tokens[1]), "DATA") ||!strcmp( maiuscula(linha->Tokens[1]), "TEXT")){
+          //      printf("AQUI 3 retorno 1 nao soma\n");
+              return 1;
+            }
+        }
+    //}
+
+
+   return 0;
+}
+
+
 
 TS * retornaTabelaSimbolos(infoLinha * linha, TS * tabelaSims,int  posicao) //int * numSim)
 {   
@@ -987,25 +909,35 @@ TS * retornaTabelaSimbolos(infoLinha * linha, TS * tabelaSims,int  posicao) //in
     int k, m, numSimbolosDefinidos;
     numSimbolosDefinidos = contaSimbolosTS(tabelaSims);
     TS *listaAUX;
-
+    int pos = posicao;
+    
 
     for(k = 0; k < linha->numTokens; k++)
         {
-     //       printf("ABCD\n");
+         //   printf("token = %s\n", linha->Tokens[k] );
+            char *nomeLabel;
+            nomeLabel = (char *)malloc(strlen(linha->Tokens[k])*sizeof(char));
+
+            nomeLabel = obtemNomeLabel(linha->Tokens[k]);
+    
+            //printf("ABCD\n");
             
-            if(!verificaSeInstrucao(linha->Tokens[k]) && !verificaSeDiretiva(linha->Tokens[k]) )
+            if(!verificaSeInstrucao(linha->Tokens[k]) && !verificaSeDiretiva(linha->Tokens[k]) && !verificaSeNumero(linha->Tokens[k]) )
             {
                 //printf("ABCD2\n");
 
-                listaAUX = buscaTS(tabelaSims, linha->Tokens[k]);
+                //listaAUX = buscaTS(tabelaSims, linha->Tokens[k]);
+                listaAUX = buscaTS(tabelaSims, nomeLabel);
                 //printf("AQUI1");
                 if(listaAUX == NULL)
                 {   
-                    tabelaSims = insereTS( tabelaSims,  linha->Tokens[k], posicao);
+                    //printf(" insere TOKEN[k] = %s\n", nomeLabel );
+                    tabelaSims = insereTS( tabelaSims,  linha->Tokens[k], pos);
                 }
                 else
                 {
-                    atualizaTS( tabelaSims,  linha->Tokens[k], posicao);
+                    //printf(" atualiza TOKEN[k] = %s\n", linha->Tokens[k] );
+                    atualizaTS( tabelaSims,  linha->Tokens[k], pos);
                 }
 
                 //printf("AAA111\n");
@@ -1017,6 +949,8 @@ TS * retornaTabelaSimbolos(infoLinha * linha, TS * tabelaSims,int  posicao) //in
                 //posicao[0]++;
                 
             }
+           if( !verificaSections(linha))
+            pos++;   
         }
 
 
