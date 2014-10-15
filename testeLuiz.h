@@ -28,11 +28,19 @@ typedef struct
 
 // }ListaSim;
 
+struct pilhaPos
+{
+    int pos;
+    struct pilhaPos * pilhaPosProx ;
+};
+
+typedef struct pilhaPos pilhaPos;
+
 struct ts 
 {
     //ListaSim simbolo;
     int numAparicoes;
-    int *pilhaDePosicoes;
+    pilhaPos * pilhaDePosicoes;
     char *nome;
     int valor;
     int def;
