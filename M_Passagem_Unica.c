@@ -72,32 +72,15 @@ int main(int argc, char const *argv[])
 
 		 j++;
 
+		//chamando a funcao de sintese para gerar o codigo objeto
 		//Sintese (linha, arqSaida, tabelaSims, primeiraVez);
 		Sintese (linha, arqSaida, primeiraVez);
-
-
-
-
-
-
-
-		//printf("numTokens = %d\n", linha->numTokens);
-		//printf("numChars  = %d\n", linha->numChars);
-		//printf("numLinha = %d\n", linha->numLinha);
-		//printf("linha = %s\n", linha->linha);
-
-		// for ( i = 0; i < linha->numTokens; ++i)
-		// {
-		// printf("Tokens %d = %s\n",i, linha->Tokens[i]);
-		// }
-		// printf("\n");
-		//free(linha);
 		
 	}
 
-	//Sintese (linha, arqSaida, primeiraVez);
 
-	//resolvePendencia(arqSaida,17);
+	//resolvePendencia(arqSaida, 3);
+	//resolvePendencia(arqSaida, 6);
 
 	fclose(ptr_file);
 
