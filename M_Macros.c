@@ -5,104 +5,180 @@
 
 #include "M_Macros.h"
 
-macro* guardandoMacro(macro *macro, FILE *arquivoEntrada, char *PrimeiroToken, char *SegundoToken);
-void gravaLinha(FILE *, char *);
+void gravaLinha(char *, char *);
 macro* insereMacro(macro* listaMacro, char *nome, char *codigo);
-void lendoLinha(FILE *arquivoEntrada, FILE *arquivoSaida);
-void separaTokens(char *PrimeiroToken, char *SegundoToken, char *linha);
+void lendoLinha(FILE *arquivoEntrada, char *NomeArquivoSaida);
+char * separaTokens(char *PrimeiroToken, char *SegundoToken, char *linha);
+macro* buscaMacro (macro* listaMacros, char *nome);
+macro* guardandoMacro(macro *macro, FILE *arquivoEntrada, char *linha);
 
 
-void gravaLinha(FILE *arquivoSaida, char *linha)
+void gravaLinha(char *NomeArquivoSaida, char *linha)
 {
+	FILE *arquivoSaida;
+
+	arquivoSaida = fopen(NomeArquivoSaida, "a");
+
+	strcat(linha,"\n");
 	fprintf(arquivoSaida, "%s", linha);
+	printf("LINHA = %s\n", linha);
 	// fprintf(arquivoSaida, "%s", SegundoToken);
+
+	fclose(arquivoSaida);
 }
 
-void separaTokens(char *PrimeiroToken, char *SegundoToken, char *linha)
+void gravaMacro(char *NomeArquivoSaida, macro *resultadoBusca)
 {
-	char * token;
-  	printf ("Splitting string \"%s\" into tokens:\n",linha);
-  	token = strtok (linha," ");
-  	PrimeiroToken = token;
+	FILE *arquivoSaida;
 
-  	while (token != NULL)
-  	{
-  		printf("entrei no while do separa\n");
-    	printf ("%s\n", token);
-    	SegundoToken = token;
-    	token = strtok (NULL, " ");
+	arquivoSaida = fopen(NomeArquivoSaida, "a");
+
+	fprintf(arquivoSaida, "%s\n", resultadoBusca->codigo);
+	printf("LINHA MACRO = %s\n", resultadoBusca->codigo);
+	// fprintf(arquivoSaida, "%s", SegundoToken);
+
+	fclose(arquivoSaida);
+}
+
+macro* buscaMacro (macro* listaMacros, char *nome)
+{
+	macro *macro;
+
+ 	for (macro = listaMacros; macro != NULL; macro = macro->pm){
+ 		if (!strcmp(macro->nome, nome))
+ 		{
+ 			printf("ACHEI MACRO = %s\n", macro->nome);
+ 			return macro;			
+ 		}		
+ 	}
+
+ 	return NULL;
+}
+
+// char * separaTokens(char *PrimeiroToken, char *SegundoToken, char *linha)
+// {
+// 	char * token;
+//   	printf ("Splitting string  - %s - into tokens:\n",linha);
+//   	PrimeiroToken = (char*)strtok (linha," :");
+//   	token = PrimeiroToken;
+//   	// strcpy(PrimeiroToken, token);
+//   	// &PrimeiroToken = token;
+
+//   	while (token != NULL)
+//   	{
+//   		printf("entrei no while do separa\n");
+//     	printf ("%s\n", token);
+//     	// SegundoToken = token;
+//     	// strcpy(SegundoToken, token);
+//     	SegundoToken = token;
+//     	token = (char*)strtok (NULL, " :");
+//     	// token = SegundoToken;
     	
-    	// printf ("%s\n", token);
-  	}
+//     	// printf ("%s\n", token);
+//   	}
 
-  	printf("PrimeiroToken = %s\n", PrimeiroToken);
-  	printf("SegundoToken = %s\n", SegundoToken);
-}
+//   	printf("PrimeiroToken = %s\n", PrimeiroToken);
+//   	printf("SegundoToken = %s\n", SegundoToken);
+
+//   	return token;
+// }
 
 
-void lendoLinha(FILE *arquivoEntrada, FILE *arquivoSaida)
+void lendoLinha(FILE *arquivoEntrada, char *NomeArquivoSaida)
 {
-	char *PrimeiroToken, *SegundoToken, *linha;
-	macro *macro = NULL;
+	char *PrimeiroToken, *SegundoToken, *linha, *ehMacro;
+	macro *macro = NULL, *resultadoBusca;
 
 	linha = (char*)malloc(sizeof(char*));
-	PrimeiroToken = (char*)malloc(sizeof(char*));
-	SegundoToken = (char *)malloc(sizeof(char*));
+	// resultadoBusca = (macro*)malloc(sizeof(macro*));
 
-	// printf("entrei na lendo arquivo\n");
-
-	// if (arquivoEntrada != NULL)
-	// {
-	// 	printf("arquivo existe e esta aberto\n");
-	// }
-	// else{
-	// 	printf("arquivo nao esta aberto\n");
-	// }
-
+	//lendo linha do arquivo
 	fscanf(arquivoEntrada, "%[^\n]%*c", linha);
 
-	printf("Linha = %s\n", linha);
 
 	while(!feof(arquivoEntrada))
 	{
-		printf("entrei no while do lendo arquivo\n");
+		//separando as duas palavras da linha (no minimo)
+		// PrimeiroToken = (char*)malloc(sizeof(char*));
+		// SegundoToken = (char *)malloc(sizeof(char*));	
+		// PrimeiroToken = (char*)strtok (linha," ");
+		// SegundoToken = (char*)strtok (NULL," ");
+
+		// printf("li token = %s\n", PrimeiroToken);
+		// printf("li token 2 =%s\n", SegundoToken);
+
+		printf("LINHA = %s\n", linha);
+		ehMacro = strstr(linha, "MACRO");
+
+		// if (ehMacro != NULL)
+		// {
+		// 	printf("EH MACRO\n");
+		// }
+
 		
-		//fscanf(arquivoEntrada, "%s", SegundoToken);
-		separaTokens(PrimeiroToken, SegundoToken, linha);
 
-		printf("li token = %s\n", PrimeiroToken);
-		printf("li token = %s\n", SegundoToken);
-
-		if (!strcmp(SegundoToken, "MACRO"))
+		if (ehMacro != NULL)
 		{
-			printf("achei macro\n");
-			macro = guardandoMacro(macro, arquivoEntrada, PrimeiroToken, SegundoToken);
+			printf("achei macro\n\n\n");
+			// printf("linhaaaaah = %s\n", linha);
+			macro = guardandoMacro(macro, arquivoEntrada, linha);
 		}
-		else{
-			printf("nao é macro\n");
-			gravaLinha(arquivoSaida, linha);
+		else
+		{
+			resultadoBusca = buscaMacro (macro, linha);
+
+			if (resultadoBusca != NULL)
+			{
+				printf("SUSBTITUI MACRO\n\n\n");
+				gravaMacro(NomeArquivoSaida, resultadoBusca);
+			}
+			else
+			{
+				printf("nao é macro\n\n\n");
+				gravaLinha(NomeArquivoSaida, linha);
+			}
 		}
 
-		fscanf(arquivoEntrada, "%s", PrimeiroToken);
+		fscanf(arquivoEntrada, "%[^\n]%*c", linha);
 	}
 }
 
-macro* guardandoMacro(macro *macro, FILE *arquivoEntrada, char *PrimeiroToken, char *SegundoToken)
+macro* guardandoMacro(macro *macro, FILE *arquivoEntrada, char *linha)
 {
-	char *nomeMacro = PrimeiroToken;
-	char *token;
-	char codigo[] = "";
+	char *nomeMacro, *NAME;
+	char *linhaMacro;
+	char *codigo;
 
-	fscanf(arquivoEntrada, "%s", token);
+	// codigo = (char*)malloc(sizeof(char*));
+	linhaMacro = (char*)malloc(sizeof(char*));
 
-	while(strcmp(token, "ENDMACRO"))
+	fscanf(arquivoEntrada, "%[^\n]%*c", linhaMacro);
+
+	// getchar();
+	while(strcmp(linhaMacro, "ENDMACRO"))
 	{
-		strcat(codigo, token);
-		fscanf(arquivoEntrada, "%s", token);
+		// getchar();
+		strcat(codigo, linhaMacro);
+		// getchar();
+		strcat(codigo,"\n");
+		// printf("LINHA MACRO = %s\n", codigo);
+		// getchar();
+		fscanf(arquivoEntrada, "%[^\n]%*c", linhaMacro);
+		// getchar();
 	}
+	// getchar();
 
-	macro = insereMacro(macro, nomeMacro, codigo);
+	nomeMacro =	(char *)malloc(sizeof(char*));
+	nomeMacro = (char*)strtok (linha,": ");
+	NAME =	(char *)malloc(sizeof(char*));	
+	strcpy(NAME, nomeMacro);
+	// *NAME = *nomeMacro;
+	// printf("MACRO = %s\n", codigo);
+	printf("NOME MACRO = %s\n", NAME);
 
+	// getchar();
+	macro = insereMacro(macro, NAME, codigo);
+	// getchar();
 	return macro;
 
 }
@@ -113,7 +189,9 @@ macro* insereMacro(macro* listaMacro, char *nome, char *codigo)
 	macro* listaAux = (macro*) calloc(1, sizeof(macro));
 
 	listaAux->nome = nome;
-	listaAux->codigo = codigo ;
+	printf("NOME MACRO = %s\n", nome);
+	strcpy(listaAux->codigo, codigo)
+	// listaAux->codigo = codigo ;
 
 	listaAux->pm = listaMacro;
 
@@ -136,13 +214,15 @@ int main(int argc, char *argv[])
 	strcat(nomeArquivoSaida, ".mcr");
 	arquivoSaida = fopen(nomeArquivoSaida, "w");
 
+	fclose(arquivoSaida);
+
 	printf("nome saida = %s\n", nomeArquivoSaida);
 
 	if (arquivoEntrada != NULL && arquivoSaida != NULL)
 	{
-		lendoLinha(arquivoEntrada, arquivoSaida);
+		lendoLinha(arquivoEntrada, nomeArquivoSaida);
 
-		fclose(arquivoSaida);
+		// fclose(arquivoSaida);
 		fclose(arquivoEntrada);
 
 	}
