@@ -4,12 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-// extern struct infoLinha *linha;
-// extern struct TS *TabelaSimbolos;
-
-// void resolveMacro (char *nomeArquivo)
-
+//struct para guardar as linhas do codigo da macro
 struct LinhaMacro
 {
     char *linha;
@@ -19,7 +14,7 @@ struct LinhaMacro
 
 typedef struct LinhaMacro linha_Macro;
 
-
+//struct para guardar a macro
 struct Macro
 {
     char *nome;
@@ -28,6 +23,9 @@ struct Macro
 };
 
 typedef struct Macro macro;
+
+//funcao principal do modulo
+void resolveMacro (char *, char *);
 
 
 

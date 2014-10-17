@@ -5,6 +5,7 @@
 
 #include "M_Macros.h"
 
+//funcoes auxiliares para o modulo
 void gravaLinha(char *, char *);
 macro* insereMacro(macro* listaMacro, char *nome, linha_Macro *listaLinhaMacro);
 void lendoLinha(FILE *arquivoEntrada, char *NomeArquivoSaida);
@@ -16,6 +17,7 @@ linha_Macro* insereLinhaMacro(linha_Macro* listaLinhaMacro, char *linha);
 linha_Macro* tamanhoCodigo (linha_Macro *);
 
 
+//funcao para gravar linhas normais 
 void gravaLinha(char *NomeArquivoSaida, char *linha)
 {
 	FILE *arquivoSaida;
@@ -28,6 +30,7 @@ void gravaLinha(char *NomeArquivoSaida, char *linha)
 	fclose(arquivoSaida);
 }
 
+//funcao para achar a macro que esta sendo referenciada no codigo
 macro* buscaMacro (macro* listaMacros, char *nome)
 {
 	macro *macro;
@@ -42,7 +45,7 @@ macro* buscaMacro (macro* listaMacros, char *nome)
  	return NULL;
 }
 
-
+//funcao que grava a macro no arquivo
 void gravaMacro(char *NomeArquivoSaida, macro *resultadoBusca)
 {
 	FILE *arquivoSaida;
@@ -83,7 +86,7 @@ linha_Macro* insereLinhaMacro(linha_Macro* listaLinhaMacro, char *linha)
 	return listaAux;
 }
 
-
+//funcao para retornar a ultima linha da macro
 linha_Macro* tamanhoCodigo (linha_Macro *lista)
 {
 	linha_Macro *p, *ultimo_elemento;
@@ -98,7 +101,7 @@ linha_Macro* tamanhoCodigo (linha_Macro *lista)
 	return ultimo_elemento;
 }
 
-
+//funccao que le o arquivo e avalia se é uma macro ou nao
 void lendoLinha(FILE *arquivoEntrada, char *NomeArquivoSaida)
 {
 	char *linha, *ehMacro;
@@ -138,6 +141,7 @@ void lendoLinha(FILE *arquivoEntrada, char *NomeArquivoSaida)
 
 }
 
+//funcao que gera a lista de macros
 macro* guardandoMacro(macro *macro, FILE *arquivoEntrada, char *linha)
 {
 	char *nomeMacro, *NAME;
@@ -161,10 +165,6 @@ macro* guardandoMacro(macro *macro, FILE *arquivoEntrada, char *linha)
 	strcpy(NAME, nomeMacro);
 
 	macro = insereMacro(macro, NAME, linhaCodigo);
-
-	// free(nomeMacro);
-	// free(NAME);
-	// free(linhaMacro);
 	
 	return macro;
 
@@ -184,18 +184,14 @@ macro* insereMacro(macro* listaMacro, char *nome, linha_Macro *listaLinhaMacro)
 	return listaAux;
 }
 
-
-// void resolveMacro (char *nomeArquivo)
-int main(int argc, char *argv[])
+//funcao principal do modulo
+void resolveMacro (char *nomeArquivoEntrada, char *nomeArquivoSaida)
 {
 	
 	FILE *arquivoEntrada, *arquivoSaida;
-	char *nomeArquivoSaida;
 
-	arquivoEntrada = fopen(argv[1], "r");
+	arquivoEntrada = fopen(nomeArquivoEntrada, "r");
 
-	nomeArquivoSaida = (char*)argv[2];
-	strcat(nomeArquivoSaida, ".mcr");
 	arquivoSaida = fopen(nomeArquivoSaida, "w");
 
 	fclose(arquivoSaida);
@@ -211,7 +207,4 @@ int main(int argc, char *argv[])
 	{
 		printf("nao consegui abrir o arquivo\n");
 	}
-
-
-	return 0;
 }
