@@ -11,8 +11,13 @@
 int main(int argc, char const *argv[])
 {
 	infoLinha *linha;
+	/*char * teste1 = "NEW_DATA", *teste2 = "OLD_DATA";
+
+    if(!strcmp(teste1,teste2))
+    	printf("IGAULLLLL\n");*/
+
 	FILE *ptr_file;
-	int i =0,j = 1, k, fim,m;
+	int i =0,j = 0, k, fim,m;
 	int posicao;
 	//posicao = (int*)malloc(1*sizeof(int));
 	posicao = 0;
@@ -33,8 +38,9 @@ int main(int argc, char const *argv[])
     //ini(linha);
 	//while (!feof(ptr_file))
 	//for (j = 0; j < 22; j++)
-	while(1)
+    while(1)
 	{
+		//Comeco Analise Lexica
 		fim = Analise (linha, ptr_file, tabelaSims, numSim);
 
 		if(fim)
@@ -43,13 +49,19 @@ int main(int argc, char const *argv[])
 		}
 
 		EscreveNumLinha(linha, j);
+		j++;// NAO APAGAR  ISSO !!!!
 		tabelaSims = retornaTabelaSimbolos(linha, tabelaSims,  posicao);
+		if(!verificaSections(linha))
+		posicao+= linha->numTokens;
+       //fim Analise Lexica
+
+		AnaliseSintatica( linha, tabelaSims);
+
+
 		//printfTS(tabelaSims);
         
 //retornaTabelaSimbolos(infoLinha * linha, TS * tabelaSims,int  posicao) //int * numSim)
 		//printf("POS  entrei = %d\n",posicao);
-        if(!verificaSections(linha))
-		posicao+= linha->numTokens;
         //printf("POS sai = %d\n",posicao);
        
 
