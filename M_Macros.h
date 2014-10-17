@@ -10,10 +10,20 @@
 
 // void resolveMacro (char *nomeArquivo)
 
+struct LinhaMacro
+{
+    char *linha;
+    struct LinhaMacro *pl;
+    struct LinhaMacro *pla;
+};
+
+typedef struct LinhaMacro linha_Macro;
+
+
 struct Macro
 {
     char *nome;
-    char *codigo;
+    linha_Macro *codigo;
     struct Macro *pm;
 };
 
