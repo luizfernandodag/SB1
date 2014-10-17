@@ -18,6 +18,7 @@ infoLinha * EscreveNumLinha(infoLinha *, int);
 TS * insereSimbolo(TS * , char *,int , int , int *  );
 TS * retornaTabelaSimbolos(infoLinha * , TS * ,int ); //int * numSim)
 int verificaSections(infoLinha *linha);
+void AnaliseSintatica(infoLinha * linha, TS * tabelaSims);
 
 void ini(infoLinha *);
 
