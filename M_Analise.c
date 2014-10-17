@@ -130,7 +130,8 @@ void ini(infoLinha * Linhas)
     diretivas[i] = (char *)malloc(10*sizeof(char ));
 
 
-    instrucoes[0] = "ADD"; //1
+
+  instrucoes[0] = "ADD"; //1
     instrucoes[1] = "SUB";// = 2,
     instrucoes[2] = "MULT";// = 3,
     instrucoes[3] = "DIV";// = 4,
@@ -155,6 +156,8 @@ void ini(infoLinha * Linhas)
     diretivas[7] = "DATA";
     diretivas[8] = "TEXT";
 
+  
+    
     
     //simbolos = (ListaSim *)realloc(simbolos, 1*sizeof(ListaSim);
     
@@ -772,6 +775,35 @@ void printfTS(TS * lista)
 }
 
 
+  
+  
+//diretivas[0] = "SECTION";
+int verificaSeSection( char * Token)
+{
+  if(!strcmp(Token, "SECTION") )
+        return 1;
+    return 0;
+ 
+}
+
+
+
+    //diretivas[7] = "DATA";
+    //diretivas[8] = "TEXT";
+
+
+int verificaSeOpTipoSection(char * Token)
+{
+
+ if(!strcmp(Token, "DATA") || !strcmp(Token, "TEXT") )
+        return 1;
+    return 0;
+   
+}   
+
+    //instrucoes[11] = "INPUT";// = 12,
+    //instrucoes[12] = "OUTPUT";// = 13,
+
 int verificaSeOpEntradaSaida(char * Token)
 {
     if(!strcmp(Token, "INPUT") || !strcmp(Token, "OUTPUT") )
@@ -780,6 +812,11 @@ int verificaSeOpEntradaSaida(char * Token)
 
 }
 
+
+
+
+    //instrucoes[9] = "LOAD";// = 10,
+    //instrucoes[10] = "STORE";// = 11,
 int verificaSeOpMemoria(char * Token)
 {
 
@@ -795,6 +832,14 @@ int verificaSeMaisOuMenos(char * Token)
         return 1;
     return 0;   
 }
+
+
+
+    //instrucoes[0] = "ADD"; //1
+    //instrucoes[1] = "SUB";// = 2,
+    //instrucoes[2] = "MULT";// = 3,
+    //instrucoes[3] = "DIV";// = 4,
+
 
 int verificaSeOpAritmetica(char * Token)
 {
@@ -818,12 +863,59 @@ int verificaSeVariavel(char * Token)
         return 1;
 }
 
+
+
+   // instrucoes[4] = "JMP";// = 5,
+   // instrucoes[5] = "JMPN";// = 6,
+   // instrucoes[6] = "JMPP";// = 7,
+   // instrucoes[7] = "JMPZ";// = 8,
+    
+
+int verificaSeOpPulo(char * Token)
+{
+    
+    if(!( !strcmp(Token, "JMPZ") ||!strcmp(Token, "JMPN") || !strcmp(Token, "JMP") || !strcmp(Token, "JMPP")  ))
+        return 0;
+    else
+        return 1;
+
+
+}
+
+
+
+//instrucoes[8] = "COPY";// = 9,
+  
+int verificaSeOpCopy(char * Token)
+{
+
+   if(!strcmp(Token, "COPY"))
+    return 1;
+
+    return 0;
+}
+
+    
+    //diretivas[1] = "SPACE";
+    //diretivas[2] = "CONST";
+    //diretivas[3] = "EQU";
+    
+int verificaSeOpAlocacaoMemoria(char * Token)
+{
+   if(!( !strcmp(Token, "SPACE") || !strcmp(Token, "CONST") || !strcmp(Token, "EQU") ))
+        return 0;
+    else
+        return 1;
+}
+
 int verificaAritmeticaExtendida(infoLinha * linha)
 {
     int numTokens = linha->numTokens;
     int i;
     int caso;
   
+
+
        if(numTokens >= 2)
        if(verificaSeDefiniToken(linha->Tokens[0]))
         {     
@@ -840,6 +932,18 @@ int verificaAritmeticaExtendida(infoLinha * linha)
         }
 
         printf("linha = %d caso %d,  numTokens = %d\n",linha->numLinha,caso, numTokens);
+
+   if(caso)
+   {
+      if(numTokens > 4)
+        return 1;
+   }
+   else
+   {
+      if(numTokens > 5)
+        return 1;
+
+   }
 
     for ( i = 0; i < numTokens; i++)
     {
@@ -883,6 +987,7 @@ int verificaAritmeticaExtendida(infoLinha * linha)
 return 0;
 
 }
+
 
 
 
@@ -1104,6 +1209,9 @@ int contaSimbolosTS(TS *lista)
     return i;
 }
 
+
+
+
 int verificaSections(infoLinha *linha)
 {
 
@@ -1181,6 +1289,247 @@ TS * retornaTabelaSimbolos(infoLinha * linha, TS * tabelaSims,int  posicao) //in
 
 }
 
+int verificaoInicial( infoLinha * linha)
+{
+    if(linha->numTokens >= 2)
+    { 
+        if (verificaSeDefiniToken(linha->Tokens[0]))
+        {
+           if(verificaSeInstrucao(linha->Tokens[1]))
+           {
+            return 1;
+           }
+           else
+           return -1;
+        }
+        else if(verificaSeInstrucao(linha->Tokens[0]))
+        {
+           return 0;
+
+        }
+    }
+
+
+    return -1;
+
+
+}
+
+  
+  
+
+
+
+    // instrucoes[0] = "ADD"; //1
+    // instrucoes[1] = "SUB";// = 2,
+    // instrucoes[2] = "MULT";// = 3,
+    // instrucoes[3] = "DIV";// = 4,
+void AnaliseSintaticaOpAritmetica(infoLinha * linha, int posInicial)
+{
+   int i;
+   int numTokens = linha->numTokens;
+
+   if( verificaSeOpAritmetica(  linha->Tokens[posInicial]))
+   {
+        if(verificaAritmeticaExtendida( linha))
+            EscreveArgErro(linha->numLinha,2);
+   }
+
+}
+
+
+
+//instrucoes[9] = "LOAD";// = 10,
+//instrucoes[10] = "STORE";// = 11,
+    
+void AnaliseSintaticaOpMemoria(infoLinha * linha, int posInicial)
+{
+
+    int i = posInicial;
+   int numTokens = linha->numTokens;
+
+   if(verificaSeOpMemoria(linha->Tokens[i]))
+   {
+
+        if( numTokens - i < 2)
+        {
+            printf("AQUI 3A\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+        if(!verificaSeVariavel(linha->Tokens[i+1]))
+        {   printf("AQUI 3B\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+
+   }
+
+}
+
+    // instrucoes[4] = "JMP";// = 5,
+    // instrucoes[5] = "JMPN";// = 6,
+    // instrucoes[6] = "JMPP";// = 7,
+    // instrucoes[7] = "JMPZ";// = 8,
+
+void AnaliseSintaticaOpPulo(infoLinha * linha, int posInicial)
+{
+
+    int i = posInicial;
+   int numTokens = linha->numTokens;
+
+   if( verificaSeOpPulo(linha->Tokens[i]))
+   {
+         if( numTokens - i < 2)
+        {
+            printf("AQUI 4A\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+        if(!verificaSeVariavel(linha->Tokens[i+1]))
+        {   printf("AQUI 4B\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+
+   }
+
+}
+
+
+    // instrucoes[11] = "INPUT";// = 12,
+    // instrucoes[12] = "OUTPUT";// = 13,
+
+
+void AnaliseSintaticaOpEntradaSaida(infoLinha * linha, int posInicial)
+{
+ 
+    int i = posInicial;
+   int numTokens = linha->numTokens;
+
+   if( verificaSeOpEntradaSaida (linha->Tokens[i]))
+   {
+        if( numTokens - i < 2)
+        {
+            printf("AQUI 5A\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+        if(!verificaSeVariavel(linha->Tokens[i+1]))
+        {   printf("AQUI 5B\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+
+   }
+
+}
+
+
+    //     diretivas[1] = "SPACE";
+    // diretivas[2] = "CONST";
+    // diretivas[3] = "EQU";
+void AnaliseSintaticaOpAlocacaoMemoria(infoLinha * linha, int posInicial)
+{
+ 
+    int i = posInicial;
+   int numTokens = linha->numTokens;
+   int flagSpaceSemNumero = 0;
+   if(linha->Tokens[i+1] == NULL)
+   {
+     flagSpaceSemNumero = 1;
+
+   }
+
+   if( verificaSeOpAlocacaoMemoria  (linha->Tokens[i]))
+   {
+        
+
+        if(strcmp(linha->Tokens[i], "SPACE"))
+        {
+            if( numTokens - i < 1)
+            {
+                printf("AQUI 6A\n");
+                EscreveArgErro(linha->numLinha,2);        
+            }
+
+            if(!flagSpaceSemNumero)
+            {
+                if(!verificaSeNumero(linha->Tokens[i+1]))
+                {
+                    printf("AQUI 6B\n");
+                EscreveArgErro(linha->numLinha,2);        
+
+                }
+            }    
+        }
+        else 
+        {
+            if( numTokens - i < 2)
+            {
+                printf("AQUI 6C\n");
+                EscreveArgErro(linha->numLinha,2);        
+            }
+
+            if(!verificaSeNumero(linha->Tokens[i+1]))
+            {
+                printf("AQUI 6D\n");
+            EscreveArgErro(linha->numLinha,2);        
+
+            }
+
+        }
+
+   }
+
+}
+
+/*  instrucoes[8] = "COPY";// = 9,
+*/
+void AnaliseSintaticaOpCopy(infoLinha * linha, int posInicial)
+{
+ 
+    int i = posInicial;
+   int numTokens = linha->numTokens;
+
+   if(  verificaSeOpCopy(linha->Tokens[i]))
+   {
+        if( numTokens - i < 3)
+        {
+            printf("AQUI 7A\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+        else if(!verificaSeVariavel(linha->Tokens[i+1]) || !verificaSeVariavel(linha->Tokens[i+2]))
+        {   printf("AQUI 7B\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+
+   }
+
+}
+
+
+/*    diretivas[0] = "SECTION";
+    diretivas[7] = "DATA";
+    diretivas[8] = "TEXT";
+*/
+
+void AnaliseSintaticaOpSection(infoLinha * linha, int posInicial)
+{
+ 
+    int i = posInicial;
+   int numTokens = linha->numTokens;
+
+   if(  verificaSeSection (linha->Tokens[i]))
+   {
+        if( numTokens != 2)
+        {
+            printf("AQUI 8A\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+        if(!verificaSeOpTipoSection( linha->Tokens[i+1]))
+        {   printf("AQUI 8B\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+
+   }
+
+}
+
 
 void AnaliseSintatica(infoLinha * linha, TS * tabelaSims)
 {
@@ -1202,124 +1551,40 @@ void AnaliseSintatica(infoLinha * linha, TS * tabelaSims)
         string1 = linha->Tokens[0];
     }
 
-printf("str1 = %s, str2 = %s\n", string1, string2 );
+//printf("str1 = %s, str2 = %s\n", string1, string2 );
 
     
 printf("teste em %s, numTokens = %d\n", linha->linha, linha->numTokens);
         // if(!(verificaSeInstrucao(linha->Tokens[1]) || !strcmp(linha->Tokens[1], "CONST") || !strcmp(linha->Tokens[1], "EQU"))  )
         // {
         //     EscreveArgErro(linha->numLinha,2);
-         
-
-        // }
-if(verificaSeDefiniToken(string1))
-{   if(string2 != NULL)
-    if(verificaSeOpAritmetica(string2))
-    if(verificaAritmeticaExtendida(linha))
+   if(numTokens == 1 && strcmp(linha->Tokens[0], "STOP"))
+   {
+    printf("Erro 1\n");
     EscreveArgErro(linha->numLinha,2);
-}
-else
-{
+   }
+   else
+   { 
+      int posInicial = verificaoInicial( linha);
 
-   if(string1 != NULL)
-    if(verificaSeOpAritmetica(string1))
-    if(verificaAritmeticaExtendida(linha))
-    EscreveArgErro(linha->numLinha,2);
-
-}
-/*
-        if(!strcmp(linha->Tokens[0], "SECTION"))
-        {
-           if(numTokens == 1)
-           EscreveArgErro(linha->numLinha,2);
-           else if(numTokens == 2)
-           {
-            if( !(  !strcmp(linha->Tokens[1], "DATA") ||  !strcmp(linha->Tokens[1], "DATA")  )    )
-                EscreveArgErro(linha->numLinha,2);
-           }
-           else if(numTokens > 2)
-            EscreveArgErro(linha->numLinha,2);
-        }
-        if( verificaSeDefiniToken(linha->Tokens[0]))
-        {
-
-            if(numTokens == 1)
-           EscreveArgErro(linha->numLinha,2);
-           else if(numTokens == 2)
-           {
-                if( !(  !strcmp(linha->Tokens[1], "SPACE") ))
-                {
-                    EscreveArgErro(linha->numLinha,2);
-                }
-           }
-           else if(numTokens == 3)
-           {
-               if(!strcmp(linha->Tokens[1], "SPACE"))
-               {
-                    if(!verificaSeNumero(linha->Tokens[2]))
-                    {
-                        EscreveArgErro(linha->numLinha,2);
-                    }
-
-               }
-               if( verificaSeOpAritmetica(linha->Tokens[1]) || verificaSeOpMemoria(linha->Tokens[1])|| verificaSeOpEntradaSaida(linha->Tokens[1]))
-               {
-                    if(verificaSeVariavel(linha->Tokens[2]))
-                    {
-                        EscreveArgErro(linha->numLinha,2);
-                    }
-               }
-           }
-           else if(numTokens == 4)
-           {
-
-           }
-
+      if(posInicial == -1)
+      {
+        printf("Erro 2\n");
+         EscreveArgErro(linha->numLinha,2);
+      }
+      else
+      {    
+        AnaliseSintaticaOpMemoria( linha, posInicial);
+        AnaliseSintaticaOpSection(linha, posInicial);
+        AnaliseSintaticaOpAritmetica(linha,posInicial);
+        AnaliseSintaticaOpAlocacaoMemoria(linha, posInicial);
+        AnaliseSintaticaOpCopy(linha, posInicial);
+        AnaliseSintaticaOpPulo(linha, posInicial);
+        AnaliseSintaticaOpEntradaSaida(linha, posInicial);
 
         }
-    
-
-/*if(verificaSeDefiniToken(linha->Tokens[0]) || verificaSeInstrucao(linha->Tokens[0]) )
-    erro = 0;
-    
-    if(numTokens > 1)
-    if(!strcmp(linha->Tokens[0], "SECTION") &&(!strcmp(linha->Tokens[1], "TEXT") || !strcmp(linha->Tokens[0], "DATA")))
-    erro = 0; 
-    
-
-    
-    // if (verificaSeDefiniToken(linha->Tokens[0]) || verificaSeInstrucao(linha->Tokens[0]) || !(!strcmp(linha->Tokens[0], "DATA")) !(!strcmp(linha->Tokens[0], "DATA")) )
-    // {
-    //     /* code */
-    // }
-
- /*   SECTION      instrucoes[0] = "ADD"; //1
-INPUT OLD_DATA     instrucoes[1] = "SUB";// = 2,
-LOAD OLD_DATA       instrucoes[2] = "MULT";// = 3,
-L1: DIV DOIS        instrucoes[3] = "DIV";// = 4,
-STORE NEW_DATA      instrucoes[4] = "JMP";// = 5,
-MULT DOIS           instrucoes[5] = "JMPN";// = 6,
-STORE TMP_DATA      instrucoes[6] = "JMPP";// = 7,
-LOAD OLD_DATA       instrucoes[8] = "COPY";// = 9,
-SUB TMP_DATA        instrucoes[9] = "LOAD";// = 10,    
-STORE TMP_DATA      instrucoes[10] = "STORE";// = 11,
-OUTPUT TMP_DATA     instrucoes[11] = "INPUT";// = 12,
-COPY NEW_DATA OLD_DATA instrucoes[12] = "OUTPUT";// = 13,
-LOAD OLD_DATA       instrucoes[13] = "STOP";// = 14
-JMPP L1             diretivas[0] = "SECTION";
-STOP                diretivas[1] = "SPACE";
-SECTION ASD         diretivas[2] = "CONST";
-DOIS: CONST 2       diretivas[3] = "EQU";
-OLD_DATA: SPACE     diretivas[4] = "IF"; 
-NEW_DATA: ADD       diretivas[5] = "MACRO";
-TMP_DATA: SPACE     diretivas[6] = "END";
-                    diretivas[7] = "DATA";
-                    diretivas[8] = "TEXT";
-
-
-
-*/    
-
+    }
+            
 
 
     
