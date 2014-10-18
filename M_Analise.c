@@ -760,6 +760,7 @@ void printfTS(TS * lista)
 
     for (p = lista; p!= NULL; p = p->prox){
          printf("nome = %s, val = %d, def = %d, valido = %d, apari = %d, ", p->nome, p->valor, p->def, p->valido, p->numAparicoes);
+         printf(" tipodef = %s, valordef = %d \n", p->tipoDeDefinicao, p->valorDeDefinicao );
          printfPilhaPos(p->pilhaDePosicoes);
          i++;
          printf("\n");
@@ -1086,6 +1087,35 @@ void atualizaTS(infoLinha *linha, TS * lista,char * nome, int pos, int Numlinha)
     listaAUX->valor = pos;
     //printf("AAAAA\n");
     listaAUX->def = 1;
+    if(linha->numTokens >=2)
+     {
+         if(!strcmp(linha->Tokens[1], "SPACE"))
+         {
+
+            if(linha->numTokens == 3)
+            {
+                printf("AAAAA22222\n");
+                listaAUX->tipoDeDefinicao = (char*)malloc(strlen("SPACE")*sizeof(char));
+                listaAUX->tipoDeDefinicao = "SPACE";
+                listaAUX->valorDeDefinicao = atoi(linha->Tokens[2]);
+                printf("BBBBB222\n");
+
+            }
+            else if(linha->numTokens == 2)
+            {
+                printf("CCCCC2222\n");
+
+                listaAUX->tipoDeDefinicao = (char*)malloc(strlen("SPACE")*sizeof(char));
+                listaAUX->tipoDeDefinicao = "SPACE";
+                printf("AQUI 222 %s\n", linha->Tokens[1]);
+                listaAUX->valorDeDefinicao = 1;
+                     printf("DDDDDD2222\n");
+
+            }
+
+
+         }
+     }
     //printf("AAAAABBBBB\n");
     //listaAUX->valido = 1;//MODIFICAR AQUI DEPOIS
     //printf("AAAAACCCCC\n");
@@ -1156,7 +1186,34 @@ if(verificaSeMaisOuMenos(nome))
      listaAUX->valor = pos;
      listaAUX->def = 1;
      listaAUX->valido = verificaErroToken(nomeLabel,pos,op);//MODIFICAR AQUI DEPOIS
+     
+     if(linha->numTokens >=2)
+     {
+         if(!strcmp(linha->Tokens[1], "SPACE"))
+         {
 
+            if(linha->numTokens == 3)
+            {
+                printf("AAAA\n");
+                listaAUX->tipoDeDefinicao = (char*)malloc(strlen("SPACE")*sizeof(char));
+                listaAUX->tipoDeDefinicao = "SPACE";
+                listaAUX->valorDeDefinicao = atoi(linha->Tokens[2]);
+                printf("BBBB\n");
+
+            }
+            else if(linha->numTokens == 2)
+            {
+                printf("CCCCC\n");
+                listaAUX->tipoDeDefinicao = (char*)malloc(strlen("SPACE")*sizeof(char));
+                listaAUX->tipoDeDefinicao = "SPACE";
+                listaAUX->valorDeDefinicao = 1;
+
+                printf("DDDDD\n");
+            }
+
+
+         }
+     }
      
 
      listaAUX->numAparicoes = 1;
@@ -1554,19 +1611,7 @@ void AnaliseSintatica(infoLinha * linha, TS * tabelaSims)
     char * string1 = (char *)malloc(sizeof(char *));
     char * string2 = (char *)malloc(sizeof(char *));
 
-    string1 = NULL;
-    string2 = NULL;
-    if(numTokens >= 2)
-    {
-
-        string1 = linha->Tokens[0];
-        string2 = linha->Tokens[1];
-    }
-    else
-    {
-        string1 = linha->Tokens[0];
-    }
-
+    
 //printf("str1 = %s, str2 = %s\n", string1, string2 );
 
     

@@ -46,6 +46,7 @@ struct ts
     int def;
     int valido;
     char * tipoDeDefinicao;
+    int valorDeDefinicao;
     struct ts * prox;
 
 };
