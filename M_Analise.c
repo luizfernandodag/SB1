@@ -314,7 +314,7 @@ int verificaErroToken(char * Token, int posicao, int op )
 
    //printf("\nNumErros = %d, \nString = %s size = %d \n", NumErros[0], Token, size);
    
- printf("ENTREI = %s\n",Token );
+// printf("ENTREI = %s\n",Token );
 
  if(size == 1 && op == 1 )
  {
@@ -931,7 +931,7 @@ int verificaAritmeticaExtendida(infoLinha * linha)
             caso = 1;
         }
 
-        printf("linha = %d caso %d,  numTokens = %d\n",linha->numLinha,caso, numTokens);
+    //    printf("linha = %d caso %d,  numTokens = %d\n",linha->numLinha,caso, numTokens);
 
    if(caso)
    {
@@ -947,19 +947,19 @@ int verificaAritmeticaExtendida(infoLinha * linha)
 
     for ( i = 0; i < numTokens; i++)
     {
-     printf(" i = %d %s\n", i, linha->Tokens[i]  );
+    // printf(" i = %d %s\n", i, linha->Tokens[i]  );
      if(caso)// exemplo: ADD N + 1 + N2
      {
         if(i > 0)
         {
 
             if(i%2 == 0 && !verificaSeMaisOuMenos(linha->Tokens[i]))//CONTINUAR AAQQQQUIIII
-            {printf("A = %s \n", linha->Tokens[i]);
+            {//printf("A = %s \n", linha->Tokens[i]);
                 return 1;
             }
 
             if(i%2 == 1 && !(verificaSeVariavel(linha->Tokens[i])  || verificaSeNumero(linha->Tokens[i])  ))
-            {printf("B = %s  \n", linha->Tokens[i]);
+            {//printf("B = %s  \n", linha->Tokens[i]);
                 return 1;
             }
         }
@@ -970,12 +970,12 @@ int verificaAritmeticaExtendida(infoLinha * linha)
         if(i > 1)
         {
            if(i%2 == 1 && !verificaSeMaisOuMenos(linha->Tokens[i]))//CONTINUAR AAQQQQUIIII
-            {printf("C = %s \n", linha->Tokens[i]);
+            {//printf("C = %s \n", linha->Tokens[i]);
                 return 1;
             }
 
             if(i%2 == 0 && !(verificaSeVariavel(linha->Tokens[i]) || verificaSeNumero(linha->Tokens[i]) ))
-            {printf("D = %s \n", linha->Tokens[i]);
+            {//printf("D = %s \n", linha->Tokens[i]);
                 return 1;
             }
         }
@@ -1253,7 +1253,7 @@ TS * retornaTabelaSimbolos(infoLinha * linha, TS * tabelaSims,int  posicao) //in
     
             //printf("ABCD\n");
             
-            if(!verificaSeInstrucao(linha->Tokens[k]) && !verificaSeDiretiva(linha->Tokens[k]) && !verificaSeNumero(linha->Tokens[k]) )
+            if(!verificaSeInstrucao(linha->Tokens[k]) && !verificaSeDiretiva(linha->Tokens[k]) && !verificaSeNumero(linha->Tokens[k]) && !verificaSeMaisOuMenos(linha->Tokens[k]) &&  strcmp(linha->Tokens[k], ","))
             {
                 //printf("ABCD2\n");
 
@@ -1291,16 +1291,23 @@ TS * retornaTabelaSimbolos(infoLinha * linha, TS * tabelaSims,int  posicao) //in
 
 int verificaoInicial( infoLinha * linha)
 {
+    //printf("A\n");
     if(linha->numTokens >= 2)
     { 
-        if (verificaSeDefiniToken(linha->Tokens[0]))
+        if(verificaSections(linha))
         {
-           if(verificaSeInstrucao(linha->Tokens[1]))
-           {
+            return 0;
+        }
+        else if (verificaSeDefiniToken(linha->Tokens[0]) )
+        {
+         //  if(verificaSeInstrucao(linha->Tokens[1]) || verificaSeOpAlocacaoMemoria()) //||  verificaSeDiretiva(linha->Tokens[1]))
+           //{
+
+            //printf("A\n");
             return 1;
-           }
-           else
-           return -1;
+           //}
+           //else
+           //return -1;
         }
         else if(verificaSeInstrucao(linha->Tokens[0]))
         {
@@ -1353,11 +1360,11 @@ void AnaliseSintaticaOpMemoria(infoLinha * linha, int posInicial)
 
         if( numTokens - i < 2)
         {
-            printf("AQUI 3A\n");
+            printf("AnaliseSintaticaOpMemoria A\n");
             EscreveArgErro(linha->numLinha,2);        
         }
         if(!verificaSeVariavel(linha->Tokens[i+1]))
-        {   printf("AQUI 3B\n");
+        {   printf("AnaliseSintaticaOpMemoria B\n");
             EscreveArgErro(linha->numLinha,2);        
         }
 
@@ -1380,11 +1387,11 @@ void AnaliseSintaticaOpPulo(infoLinha * linha, int posInicial)
    {
          if( numTokens - i < 2)
         {
-            printf("AQUI 4A\n");
+            printf("AnaliseSintaticaOpPulo A\n");
             EscreveArgErro(linha->numLinha,2);        
         }
         if(!verificaSeVariavel(linha->Tokens[i+1]))
-        {   printf("AQUI 4B\n");
+        {   printf("AnaliseSintaticaOpPulo B\n");
             EscreveArgErro(linha->numLinha,2);        
         }
 
@@ -1407,11 +1414,11 @@ void AnaliseSintaticaOpEntradaSaida(infoLinha * linha, int posInicial)
    {
         if( numTokens - i < 2)
         {
-            printf("AQUI 5A\n");
+            printf("AnaliseSintaticaOpEntradaSaida A\n");
             EscreveArgErro(linha->numLinha,2);        
         }
         if(!verificaSeVariavel(linha->Tokens[i+1]))
-        {   printf("AQUI 5B\n");
+        {   printf("AnaliseSintaticaOpEntradaSaida B\n");
             EscreveArgErro(linha->numLinha,2);        
         }
 
@@ -1429,52 +1436,61 @@ void AnaliseSintaticaOpAlocacaoMemoria(infoLinha * linha, int posInicial)
     int i = posInicial;
    int numTokens = linha->numTokens;
    int flagSpaceSemNumero = 0;
-   if(linha->Tokens[i+1] == NULL)
-   {
-     flagSpaceSemNumero = 1;
 
-   }
+ //  printf("pos ini = %d str = %s\n", i, linha->Tokens[i] );
+   // if(i+1 >= numTokens)
+   // {
+   //   flagSpaceSemNumero = 1;
 
+   // }
+
+
+
+   //printf(" flagSPACESemNumero = %d AAAAA22222\n", flagSpaceSemNumero );
+   //printf("%s Token[posinicial] = %s\n", linha->linha, linha->Tokens[posInicial] );
    if( verificaSeOpAlocacaoMemoria  (linha->Tokens[i]))
    {
         
 
-        if(strcmp(linha->Tokens[i], "SPACE"))
+        if(!strcmp(linha->Tokens[i], "SPACE"))
         {
-            if( numTokens - i < 1)
-            {
-                printf("AQUI 6A\n");
-                EscreveArgErro(linha->numLinha,2);        
-            }
 
-            if(!flagSpaceSemNumero)
+            if(i +1 < numTokens)
             {
-                if(!verificaSeNumero(linha->Tokens[i+1]))
+
+                if(!(verificaSeNumero(linha->Tokens[i+1])))
                 {
-                    printf("AQUI 6B\n");
-                EscreveArgErro(linha->numLinha,2);        
-
+                    printf("AnaliseSintaticaOpAlocacaoMemoria A \n");
+                    EscreveArgErro(linha->numLinha,2);                
                 }
-            }    
+            }  
         }
-        else 
+        else
         {
-            if( numTokens - i < 2)
-            {
-                printf("AQUI 6C\n");
-                EscreveArgErro(linha->numLinha,2);        
-            }
 
-            if(!verificaSeNumero(linha->Tokens[i+1]))
+            if(i +1 >= numTokens)
             {
-                printf("AQUI 6D\n");
-            EscreveArgErro(linha->numLinha,2);        
+
+                    printf("AnaliseSintaticaOpAlocacaoMemoria B \n");
+                    EscreveArgErro(linha->numLinha,2);                
+            }
+            else
+            {
+                if(!(verificaSeNumero(linha->Tokens[i+1])))
+                {
+                    printf("AnaliseSintaticaOpAlocacaoMemoria C \n");
+                    EscreveArgErro(linha->numLinha,2);                
+                }
+
+
 
             }
 
         }
-
+            
    }
+   //printf("AAAAA333333\n" );
+        
 
 }
 
@@ -1488,13 +1504,13 @@ void AnaliseSintaticaOpCopy(infoLinha * linha, int posInicial)
 
    if(  verificaSeOpCopy(linha->Tokens[i]))
    {
-        if( numTokens - i < 3)
+        if( numTokens - i < 4)
         {
-            printf("AQUI 7A\n");
+            printf("AnaliseSintaticaOpCopy A\n");
             EscreveArgErro(linha->numLinha,2);        
         }
-        else if(!verificaSeVariavel(linha->Tokens[i+1]) || !verificaSeVariavel(linha->Tokens[i+2]))
-        {   printf("AQUI 7B\n");
+        else if(!verificaSeVariavel(linha->Tokens[i+1]) || !verificaSeVariavel(linha->Tokens[i+3]))
+        {   printf("AnaliseSintaticaOpCopy B\n");
             EscreveArgErro(linha->numLinha,2);        
         }
 
@@ -1518,11 +1534,11 @@ void AnaliseSintaticaOpSection(infoLinha * linha, int posInicial)
    {
         if( numTokens != 2)
         {
-            printf("AQUI 8A\n");
+            printf("AnaliseSintaticaOpSection A\n");
             EscreveArgErro(linha->numLinha,2);        
         }
         if(!verificaSeOpTipoSection( linha->Tokens[i+1]))
-        {   printf("AQUI 8B\n");
+        {   printf("AnaliseSintaticaOpSection B\n");
             EscreveArgErro(linha->numLinha,2);        
         }
 
@@ -1554,22 +1570,25 @@ void AnaliseSintatica(infoLinha * linha, TS * tabelaSims)
 //printf("str1 = %s, str2 = %s\n", string1, string2 );
 
     
-printf("teste em %s, numTokens = %d\n", linha->linha, linha->numTokens);
+//printf("teste em %s, numTokens = %d\n", linha->linha, linha->numTokens);
         // if(!(verificaSeInstrucao(linha->Tokens[1]) || !strcmp(linha->Tokens[1], "CONST") || !strcmp(linha->Tokens[1], "EQU"))  )
         // {
         //     EscreveArgErro(linha->numLinha,2);
-   if(numTokens == 1 && strcmp(linha->Tokens[0], "STOP"))
+   if(numTokens == 1)
    {
-    printf("Erro 1\n");
+   if(strcmp(linha->Tokens[0], "STOP") != 0)
+   {
+    printf("Erro linha apenas com um Token diferente de STOP\n");
     EscreveArgErro(linha->numLinha,2);
    }
-   else
+  }
+   else 
    { 
       int posInicial = verificaoInicial( linha);
 
       if(posInicial == -1)
       {
-        printf("Erro 2\n");
+        printf("Erro sintatico linha %d : %s\n",linha->numLinha, linha->Tokens[0]);
          EscreveArgErro(linha->numLinha,2);
       }
       else
