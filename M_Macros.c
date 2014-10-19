@@ -8,7 +8,7 @@
 //funcoes auxiliares para o modulo
 void gravaLinha(char *, char *);
 macro* insereMacro(macro* listaMacro, char *nome, linha_Macro *listaLinhaMacro);
-void lendoLinha(FILE *arquivoEntrada, char *NomeArquivoSaida);
+void lendoLinhaMacro(FILE *arquivoEntrada, char *NomeArquivoSaida);
 char * separaTokens(char *PrimeiroToken, char *SegundoToken, char *linha);
 macro* buscaMacro (macro* listaMacros, char *nome);
 macro* guardandoMacro(macro *macro, FILE *arquivoEntrada, char *linha);
@@ -16,6 +16,17 @@ void gravaMacro(char *NomeArquivoSaida, macro *resultadoBusca);
 linha_Macro* insereLinhaMacro(linha_Macro* listaLinhaMacro, char *linha);
 linha_Macro* tamanhoCodigo (linha_Macro *);
 
+
+//funcao para salvar no arquivo de erros, caso o programador nao defina o final da macro
+void EscreveArgErro(int linha)
+{
+
+    FILE *argErros = fopen("erros.txt", "a");
+    
+
+    fprintf(argErros, "4 %d |", linha);
+    fclose(argErros);
+}
 
 //funcao para gravar linhas normais 
 void gravaLinha(char *NomeArquivoSaida, char *linha)
@@ -102,10 +113,11 @@ linha_Macro* tamanhoCodigo (linha_Macro *lista)
 }
 
 //funccao que le o arquivo e avalia se é uma macro ou nao
-void lendoLinha(FILE *arquivoEntrada, char *NomeArquivoSaida)
+void lendoLinhaMacro(FILE *arquivoEntrada, char *NomeArquivoSaida)
 {
 	char *linha, *ehMacro;
 	macro *macro = NULL, *resultadoBusca;
+	int contador = 0;
 
 	linha = (char*)malloc(sizeof(char*));
 
@@ -120,6 +132,13 @@ void lendoLinha(FILE *arquivoEntrada, char *NomeArquivoSaida)
 		if (ehMacro != NULL)
 		{
 			macro = guardandoMacro(macro, arquivoEntrada, linha);
+
+			//resolvendo caso o programador nao coloque o final da macro
+			if (feof(arquivoEntrada))
+			{
+				EscreveArgErro(contador);
+				break;
+			}
 		}
 		else
 		{
@@ -135,7 +154,10 @@ void lendoLinha(FILE *arquivoEntrada, char *NomeArquivoSaida)
 			}
 		}
 
+
+
 		fscanf(arquivoEntrada, "%[^\n]%*c", linha);
+		contador++;
 	}
 
 
@@ -153,7 +175,7 @@ macro* guardandoMacro(macro *macro, FILE *arquivoEntrada, char *linha)
 
 	fscanf(arquivoEntrada, "%[^\n]%*c", linhaMacro);
 
-	while(strcmp(linhaMacro, "ENDMACRO"))
+	while(!feof(arquivoEntrada) && strcmp(linhaMacro, "ENDMACRO"))
 	{
 		linhaCodigo = insereLinhaMacro(linhaCodigo, linhaMacro);
 		fscanf(arquivoEntrada, "%[^\n]%*c", linhaMacro);
@@ -198,7 +220,7 @@ void resolveMacro (char *nomeArquivoEntrada, char *nomeArquivoSaida)
 
 	if (arquivoEntrada != NULL && arquivoSaida != NULL)
 	{
-		lendoLinha(arquivoEntrada, nomeArquivoSaida);
+		lendoLinhaMacro(arquivoEntrada, nomeArquivoSaida);
 
 		fclose(arquivoEntrada);
 
