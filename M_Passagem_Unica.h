@@ -6,8 +6,8 @@
 
 // typedef struct Teste
 // {
-// 	int numero;
-// 	struct Teste *pt;
+//  int numero;
+//  struct Teste *pt;
 // }Teste;
 
 
@@ -28,15 +28,25 @@ typedef struct
 
 // }ListaSim;
 
+struct pilhaPos
+{
+    int pos;
+    struct pilhaPos * pilhaPosProx ;
+};
+
+typedef struct pilhaPos pilhaPos;
+
 struct ts 
 {
     //ListaSim simbolo;
     int numAparicoes;
-    int *pilhaDePosicoes;
+    pilhaPos * pilhaDePosicoes;
     char *nome;
     int valor;
     int def;
     int valido;
+    char * tipoDeDefinicao;
+    int valorDeDefinicao;
     struct ts * prox;
 
 };
@@ -46,5 +56,10 @@ typedef struct ts TS;
 
 
 #endif
+
+
+
+
+
 
 

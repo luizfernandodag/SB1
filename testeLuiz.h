@@ -1,5 +1,5 @@
-#ifndef _PASSAGEM_H_
-#define _PASSAGEM_H_
+#ifndef _LUIZ_H_
+#define _LUIZ_H_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,10 +31,24 @@ typedef struct
 struct pilhaPos
 {
     int pos;
+    int linha;
+//    int posInicial;
     struct pilhaPos * pilhaPosProx ;
 };
 
+
 typedef struct pilhaPos pilhaPos;
+
+struct opLinha
+{
+   int linha;
+   char * operacao;
+   int numArgs;
+   int posInicial;
+   struct opLinha* opLinhaProx;
+};
+
+typedef struct opLinha opLinha; 
 
 struct ts 
 {
@@ -46,6 +60,7 @@ struct ts
     int def;
     int valido;
     char * tipoDeDefinicao;
+    int valorDeDefinicao;
     struct ts * prox;
 
 };
