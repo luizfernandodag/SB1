@@ -56,8 +56,8 @@ int main(int argc, char const *argv[])
 		tabelaSims = retornaTabelaSimbolos(linha, tabelaSims,  posicao);
 
 
-		if(!verificaSections(linha))
-		posicao+= linha->numTokens;
+//		if(!verificaSections(linha))
+		posicao+= contaSomaPos( linha); //linha->numTokens;
        //fim Analise Lexica
 
 		linhas = AnaliseSintatica( linha, tabelaSims,linhas);
@@ -86,7 +86,7 @@ int main(int argc, char const *argv[])
 
 	printfTS(tabelaSims);
 
-
+    printfOpLinha( linhas);
 	// listaNo = (struct Teste *) malloc(1*sizeof(struct Teste));
 
 	// pegaLista(lista, 10);

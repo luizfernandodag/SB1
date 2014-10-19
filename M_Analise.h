@@ -23,5 +23,7 @@ int verificaSections(infoLinha *linha);
 opLinha * AnaliseSintatica(infoLinha * linha, TS * tabelaSims, opLinha * linhas);
 
 void ini(infoLinha *);
+void printfOpLinha(opLinha * lista);
+int contaSomaPos(infoLinha * linha);
 
 #endif

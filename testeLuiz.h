@@ -43,6 +43,7 @@ struct opLinha
 {
    int linha;
    char * operacao;
+   char ** args;
    int numArgs;
    int posInicial;
    struct opLinha* opLinhaProx;
@@ -59,6 +60,7 @@ struct ts
     int valor;
     int def;
     int valido;
+    int offset;
     char * tipoDeDefinicao;
     int valorDeDefinicao;
     struct ts * prox;

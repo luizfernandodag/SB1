@@ -760,7 +760,7 @@ void printfOpLinha(opLinha * lista)
     for(p = lista;p!=NULL;p = p->opLinhaProx)
     {
 
-        printf("op = %s, linha = %d, numArgs = %d\n", p->operacao, p->linha, p->numArgs );
+        printf("op = %s, linha = %d, posInicial = %d, numArgs = %d\n", p->operacao, p->linha,p->posInicial , p->numArgs );
     }
 
 }
@@ -1009,6 +1009,7 @@ return 0;
 
 
 
+
 pilhaPos * inserePilhaPos(pilhaPos* p, int posicao, int linha)
 {
     pilhaPos* pilhaAUX = (pilhaPos*) malloc(sizeof(pilhaPos));
@@ -1065,6 +1066,64 @@ int verificaSeOpAritmeticaLabel(infoLinha * linha)
         }
   }
         return 0;
+}
+
+
+// int obtemOffsetOpAritmeticaExtendida(infoLinha *linha)
+// {
+//   return atoi(linha->Tokens[linha->numTokens -1]);
+
+// }
+
+int retornaOffsetAritmetico(infoLinha * linha)
+{
+ int i;
+ int ini = -1;
+ int temOffset =0;
+ int sinal = 0;
+ int offset = 0;
+ int numTokens = linha->numTokens;
+ int posNum = 0;
+ if(numTokens >= 3)
+ {
+    if(verificaSeOpAritmetica(linha->Tokens[0]))
+        ini = 0;
+    if(verificaSeOpAritmetica(linha->Tokens[1]))
+        ini = 1;
+ }
+
+//printf("AQUI 333\n");
+if(ini != -1)
+ for ( i = ini; i < numTokens; i++)
+ {
+    if(verificaSeNumero(linha->Tokens[i]))
+        posNum = i;
+
+     if(i < numTokens -1)
+     {
+        if(verificaSeMaisOuMenos(linha->Tokens[i]))
+        {   temOffset = 1;
+            if(!strcmp(linha->Tokens[i],"+"))
+                sinal = 1;
+            else if(!strcmp(linha->Tokens[i],"-"))
+                sinal = -1;
+        }
+     }
+ }
+//printf("AQUII 444\n");
+ if(temOffset)
+  {
+    offset = sinal*atoi(linha->Tokens[posNum]);
+    printf("%s offset = %d\n",linha->linha, offset );
+    return offset;
+  }
+
+
+
+
+ return 0;
+
+
 }
 
 void atualizaTS(infoLinha *linha, TS * lista,char * nome, int pos, int Numlinha)
@@ -1173,10 +1232,16 @@ void atualizaTS(infoLinha *linha, TS * lista,char * nome, int pos, int Numlinha)
     {
      //   printf("NAO DEFINI ATUALIZA \n"); 
     listaAUX->numAparicoes++;
+//    if(verificaAritmeticaExtendida(linha))
+    //listaAUX=>def
     //printf("INSERE %s pos = %d \n", nomeLabel, pos);
     //printf("nome = %s, val = %d, def = %d, valido = %d, apari = %d, ", listaAUX->nome, listaAUX->valor, listaAUX->def, listaAUX->valido, listaAUX->numAparicoes);
     //printfPilhaPos(listaAUX->pilhaDePosicoes);
+  //  printf("AQUI222 \n");
+    if(listaAUX->def != 1)
+    listaAUX->offset = retornaOffsetAritmetico(linha);
     
+
     //printfTS(listaAUX); 
   //  printf("%s insere %d \n", nomeLabel,pos );
     listaAUX->pilhaDePosicoes = inserePilhaPos(listaAUX->pilhaDePosicoes, pos, Numlinha);
@@ -1310,7 +1375,14 @@ if(verificaSeMaisOuMenos(nome))
         //printfTS(listaAUX);
         listaAUX->nome = nome;
         listaAUX->valor = -1;
-        listaAUX->def = 0;
+    //    printf("AQUI \n");
+    if(listaAUX->def != 1)
+    listaAUX->offset = retornaOffsetAritmetico(linha);
+    
+
+    if(listaAUX->def != 0 && listaAUX->def != 1)
+    printf("%s DEF = %d\n", linha->linha, listaAUX->def);
+
         listaAUX->valido = verificaErroToken(nome,pos,op);//MODIFICAR AQUI DEPOIS
         listaAUX->numAparicoes = 2;
         listaAUX->prox = listaTS;
@@ -1412,11 +1484,11 @@ TS * retornaTabelaSimbolos(infoLinha * linha, TS * tabelaSims,int  posicao) //in
                 //posicao[0]++;
                 
             }
-           if( !verificaSections(linha))
+           if(!(verificaSections(linha) || !strcmp("SPACE",linha->Tokens[k] )|| verificaSeDefiniToken(linha->Tokens[k])|| verificaSeMaisOuMenos(linha->Tokens[k]) || !strcmp(linha->Tokens[k],",")))
             pos++;   
         }
 
-
+ // printf("andei = %d\n",pos );
     return  tabelaSims; 
 
 }
@@ -1589,6 +1661,54 @@ void AnaliseSintaticaOpEntradaSaida(infoLinha * linha, int posInicial,TS * tabel
 
 }
 
+int contaSomaPos(infoLinha * linha)
+{
+    int numTokens = linha->numTokens;
+    int anda = 0;
+    int i;
+    int flagDEF= 0;
+
+    if(verificaSeDefiniToken(linha->Tokens[0]))
+        flagDEF = 1;
+
+printf("%s ",linha->linha );
+   for ( i = flagDEF; i < numTokens; i++)
+   {
+       
+        if(!strcmp(linha->Tokens[i], "SPACE"))
+        {
+                 if(i+1 <numTokens)
+                 {
+                    if(verificaSeNumero(linha->Tokens[i+1]))
+                    {
+                        printf("BBBB  anda = %d\n", atoi(linha->Tokens[i+1]));
+                        return atoi(linha->Tokens[i+1]);
+                    }
+                 }
+                 else
+                 return 1;   
+
+        }
+        if(!(verificaSeMaisOuMenos(linha->Tokens[i])))
+        if(strcmp(linha->Tokens[i], ","))
+        if( !strcmp(linha->Tokens[i], "CONST") ||verificaSeVariavel(linha->Tokens[i]) || verificaSeInstrucao(linha->Tokens[i]))
+        {
+    //        printf("%s\n", linha->Tokens[i]);
+           anda++;
+        }
+        
+
+   }
+    
+
+
+
+    
+printf(" AAA anda = %d\n", anda );
+        return anda;
+} 
+
+
 
     //     diretivas[1] = "SPACE";
     // diretivas[2] = "CONST";
@@ -1709,14 +1829,24 @@ void AnaliseSintaticaOpSection(infoLinha * linha, int posInicial,TS * tabelaSims
 
 }
 
-opLinha * insereOpLinha(infoLinha *linha, int posInicial)
+opLinha * insereOpLinha(infoLinha *linha, int posInicial, opLinha * op)
 {
+    int i;
     opLinha * pilhaAUX = (opLinha *)malloc(sizeof(opLinha));
     pilhaAUX->linha = linha->numLinha;
     pilhaAUX->operacao = (char *)malloc(strlen(linha->Tokens[posInicial])*sizeof(char));
     pilhaAUX->operacao = linha->Tokens[posInicial];
     pilhaAUX->posInicial = posInicial;
     pilhaAUX->numArgs = linha->numTokens - posInicial;
+    pilhaAUX->args = (char **)malloc(pilhaAUX->numArgs*sizeof(char *))
+
+    for ( i = 0; i < ; ++i)
+    {
+        /* code */
+    }
+
+
+    pilhaAUX->opLinhaProx = op;
 
     return pilhaAUX;    
 
@@ -1764,7 +1894,7 @@ opLinha * AnaliseSintatica(infoLinha * linha, TS * tabelaSims, opLinha * linhas)
       else
       {
 
-        linhas = insereOpLinha(linha, posInicial);    
+        linhas = insereOpLinha(linha, posInicial,linhas);    
         AnaliseSintaticaOpMemoria( linha, posInicial, tabelaSims);
         AnaliseSintaticaOpSection(linha, posInicial,tabelaSims);
         AnaliseSintaticaOpAritmetica(linha,posInicial,tabelaSims);
@@ -1779,6 +1909,291 @@ opLinha * AnaliseSintatica(infoLinha * linha, TS * tabelaSims, opLinha * linhas)
 
 return linhas;
     
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void AnaliseSemanticaOpAritmetica(opLinhas * linha, TS * tabelaSims)
+{
+   int i = posInicial;
+   int numTokens = linha->numTokens;
+   TS *listaAUX;
+
+   if( verificaSeOpAritmetica(  linha->Tokens[posInicial]))
+   {
+        if( numTokens - i < 2)
+        {
+            printf("AnaliseSintaticaOpAritmetica A\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+        else if(verificaAritmeticaExtendida( linha))
+            EscreveArgErro(linha->numLinha,2);
+   }
+
+}
+
+
+
+//instrucoes[9] = "LOAD";// = 10,
+//instrucoes[10] = "STORE";// = 11,
+    
+void AnaliseSemanticaOpMemoria(opLinhas * linha, TS * tabelaSims)
+{
+
+    int i = posInicial;
+   int numTokens = linha->numTokens;
+   TS *listaAUX;
+  // listaAUX = buscaTS(tabelaSims, linha->Tokens[i+1]);
+
+   if(verificaSeOpMemoria(linha->Tokens[i]))
+   {
+
+        if( numTokens - i != 2)
+        {
+            printf("AnaliseSintaticaOpMemoria A\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+        if(!verificaSeVariavel(linha->Tokens[i+1]))
+        {   printf("AnaliseSintaticaOpMemoria B\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+
+   }
+
+}
+
+    // instrucoes[4] = "JMP";// = 5,
+    // instrucoes[5] = "JMPN";// = 6,
+    // instrucoes[6] = "JMPP";// = 7,
+    // instrucoes[7] = "JMPZ";// = 8,
+
+void AnaliseSemanticaOpPulo(opLinhas * linha, TS * tabelaSims)
+{
+
+    int i = posInicial;
+   int numTokens = linha->numTokens;
+   TS *listaAUX;
+   
+//listaAUX = buscaTS(tabelaSims, linha->Tokens[i+1]);
+   if( verificaSeOpPulo(linha->Tokens[i]))
+   {
+         if( numTokens - i != 2)
+        {
+            printf("AnaliseSintaticaOpPulo A\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+        else
+        {
+            listaAUX = buscaTS(tabelaSims, linha->Tokens[i+1]);
+            if(listaAUX->def == 0 || listaAUX->valido == 0)
+            {
+                EscreveArgErro(linha->numLinha,3);        
+            }     
+
+        }
+        if(!verificaSeVariavel(linha->Tokens[i+1]))
+        {   printf("AnaliseSintaticaOpPulo B\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+
+        
+
+   }
+
+
+
+}
+
+
+    // instrucoes[11] = "INPUT";// = 12,
+    // instrucoes[12] = "OUTPUT";// = 13,
+
+
+void AnaliseSemanticaOpEntradaSaida(opLinhas * linha, TS * tabelaSims)
+{
+ 
+    int i = posInicial;
+   int numTokens = linha->numTokens;
+
+   if( verificaSeOpEntradaSaida (linha->Tokens[i]))
+   {
+        if( numTokens - i != 2)
+        {
+            printf("AnaliseSintaticaOpEntradaSaida A\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+
+        if(!verificaSeVariavel(linha->Tokens[i+1]))
+        {   printf("AnaliseSintaticaOpEntradaSaida B\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+
+   }
+
+}
+    
+
+
+
+    
+printf(" AAA anda = %d\n", anda );
+        return anda;
+} 
+
+
+
+    //     diretivas[1] = "SPACE";
+    // diretivas[2] = "CONST";
+    // diretivas[3] = "EQU";
+void AnaliseSemanticaOpAlocacaoMemoria(opLinhas * linha, TS * tabelaSims)
+{
+ 
+    int i = posInicial;
+   int numTokens = linha->numTokens;
+   int flagSpaceSemNumero = 0;
+
+ //  printf("pos ini = %d str = %s\n", i, linha->Tokens[i] );
+   // if(i+1 >= numTokens)
+   // {
+   //   flagSpaceSemNumero = 1;
+
+   // }
+
+
+
+   //printf(" flagSPACESemNumero = %d AAAAA22222\n", flagSpaceSemNumero );
+   //printf("%s Token[posinicial] = %s\n", linha->linha, linha->Tokens[posInicial] );
+   if( verificaSeOpAlocacaoMemoria  (linha->Tokens[i]))
+   {
+        
+
+        if(!strcmp(linha->Tokens[i], "SPACE"))
+        {
+
+            if(i +1 < numTokens)
+            {
+
+                if(!(verificaSeNumero(linha->Tokens[i+1])))
+                {
+                    printf("AnaliseSintaticaOpAlocacaoMemoria A \n");
+                    EscreveArgErro(linha->numLinha,2);                
+                }
+            }  
+        }
+        else
+        {
+
+            if(i +1 >= numTokens)
+            {
+
+                    printf("AnaliseSintaticaOpAlocacaoMemoria B \n");
+                    EscreveArgErro(linha->numLinha,2);                
+            }
+            else
+            {
+                if(!(verificaSeNumero(linha->Tokens[i+1])))
+                {
+                    printf("AnaliseSintaticaOpAlocacaoMemoria C \n");
+                    EscreveArgErro(linha->numLinha,2);                
+                }
+
+
+
+            }
+
+        }
+            
+   }
+   //printf("AAAAA333333\n" );
+        
+
+}
+
+/*  instrucoes[8] = "COPY";// = 9,
+*/
+void AnaliseSemanticaOpCopy(opLinhas * linha, TS * tabelaSims)
+{
+ 
+    int i = posInicial;
+   int numTokens = linha->numTokens;
+
+   if(  verificaSeOpCopy(linha->Tokens[i]))
+   {
+        if( numTokens - i != 4)
+        {
+            printf("AnaliseSintaticaOpCopy A\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+        else if(!verificaSeVariavel(linha->Tokens[i+1]) || !verificaSeVariavel(linha->Tokens[i+3]))
+        {   printf("AnaliseSintaticaOpCopy B\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+
+   }
+
+}
+
+
+/*    diretivas[0] = "SECTION";
+    diretivas[7] = "DATA";
+    diretivas[8] = "TEXT";
+*/
+
+void AnaliseSematicaOpSection(opLinhas * linha, TS * tabelaSims)
+{
+ 
+    int i = posInicial;
+   int numTokens = linha->numTokens;
+
+   if(  verificaSeSection (linha->Tokens[i]))
+   {
+        if( numTokens != 2)
+        {
+            printf("AnaliseSintaticaOpSection A\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+        if(!verificaSeOpTipoSection( linha->Tokens[i+1]))
+        {   printf("AnaliseSintaticaOpSection B\n");
+            EscreveArgErro(linha->numLinha,2);        
+        }
+
+   }
+
+}
+
+
+void analiseSemantica(opLinhas * linha, TS * tabelaSims)
+{
+
+    struct opLinha
+{
+   int linha;
+   char * operacao;
+   int numArgs;
+   int posInicial;
+   struct opLinha* opLinhaProx;
+};
+
+
+
 }
 
 
