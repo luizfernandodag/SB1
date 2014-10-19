@@ -18,6 +18,7 @@ int main(int argc, char const *argv[])
 	int i =0,j = 0, k, fim,m, posicao = 1, primeiraVez = 1;
 	TS * tabelaSims = NULL;
 	int * numSim;
+	opLinha * linhas = NULL;
 	numSim = (int *)malloc(1*sizeof(int));
 	numSim[0] = 0;
 
@@ -50,9 +51,9 @@ int main(int argc, char const *argv[])
 		posicao+= linha->numTokens;
        //fim Analise Lexica
 
-		AnaliseSintatica( linha, tabelaSims);
+		//AnaliseSintatica( linha, tabelaSims);
 
-
+		linhas = AnaliseSintatica( linha, tabelaSims,linhas);
 		//chamando a funcao de sintese para gerar o codigo objeto
 		Sintese (linha, arqSaida, tabelaSims, primeiraVez);
 		// Sintese (linha, arqSaida, primeiraVez);
