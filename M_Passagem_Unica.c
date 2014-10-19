@@ -15,7 +15,7 @@ int main(int argc, char const *argv[])
 
 	infoLinha *linha;
 	FILE *ptr_file;
-	int i =0,j = 1, k, fim,m, posicao = 1, primeiraVez = 1;
+	int i =0,j = 0, k, fim,m, posicao = 1, primeiraVez = 1;
 	TS * tabelaSims = NULL;
 	int * numSim;
 	numSim = (int *)malloc(1*sizeof(int));
@@ -43,40 +43,22 @@ int main(int argc, char const *argv[])
 
 		EscreveNumLinha(linha, j);
 
-  //       for(k = 0; k < linha->numTokens; k++)
-  //       {
-  //       	printf("ABCD\n");
-			
-		// 	if(!verificaSeInstrucao(linha->Tokens[k]) && !verificaSeDiretiva(linha->Tokens[k]) )
-  //           {
-  //           	printf("ABCD2\n");
-
-            	
-
-  //               //printf("AAA111\n");
-  //               //numSim[0]++;
-  //               tabelaSims =  insereSimbolo( tabelaSims, linha->Tokens[k],posicao, 1,numSim );
-  //               printf("ABCD3\n");
-  //               //printTabelaSims( tabelaSims,numSimbolos);
-  //               posicao++;
-
-  //               for(m = 0; m< numSim[0]; m++ )
-  //               { 
-  //                  // printf(" AAAA FORA2 m = %d,  %s\n",m,  tabelaSims[m].simbolo.nome);
-  //               }
-            
-  //           }
-	 //    }
-
-
-
 		 j++;
+
+		 tabelaSims = retornaTabelaSimbolos(linha, tabelaSims,  posicao);
+		if(!verificaSections(linha))
+		posicao+= linha->numTokens;
+       //fim Analise Lexica
+
+		AnaliseSintatica( linha, tabelaSims);
+
 
 		//chamando a funcao de sintese para gerar o codigo objeto
 		//Sintese (linha, arqSaida, tabelaSims, primeiraVez);
 		Sintese (linha, arqSaida, primeiraVez);
 		
 	}
+	printfTS(tabelaSims);
 
 
 	//resolvePendencia(arqSaida, 3);
