@@ -1089,31 +1089,56 @@ void atualizaTS(infoLinha *linha, TS * lista,char * nome, int pos, int Numlinha)
     listaAUX->def = 1;
     if(linha->numTokens >=2)
      {
+        //printf("AQUI 1 = %s\n", linha->Tokens[1]);
          if(!strcmp(linha->Tokens[1], "SPACE"))
          {
 
             if(linha->numTokens == 3)
             {
-                printf("AAAAA22222\n");
+             //   printf("AAAAA22222\n");
                 listaAUX->tipoDeDefinicao = (char*)malloc(strlen("SPACE")*sizeof(char));
                 listaAUX->tipoDeDefinicao = "SPACE";
                 listaAUX->valorDeDefinicao = atoi(linha->Tokens[2]);
-                printf("BBBBB222\n");
+               // printf("BBBBB222\n");
 
             }
             else if(linha->numTokens == 2)
             {
-                printf("CCCCC2222\n");
+                //printf("CCCCC2222\n");
 
                 listaAUX->tipoDeDefinicao = (char*)malloc(strlen("SPACE")*sizeof(char));
                 listaAUX->tipoDeDefinicao = "SPACE";
-                printf("AQUI 222 %s\n", linha->Tokens[1]);
+                //printf("AQUI 222 %s\n", linha->Tokens[1]);
                 listaAUX->valorDeDefinicao = 1;
-                     printf("DDDDDD2222\n");
+                  //   printf("DDDDDD2222\n");
 
             }
 
+         }
+         else if(!strcmp(linha->Tokens[1], "CONST")) 
+             {
+                    //printf("AAAA 1111\n");
+                    listaAUX->tipoDeDefinicao = (char*)malloc(strlen("CONST")*sizeof(char));
+                    listaAUX->tipoDeDefinicao = "CONST";
+                    listaAUX->valorDeDefinicao = atoi(linha->Tokens[2]);
+                  //  printf("BBBB 1111\n");
+             }
+             else if(!strcmp(linha->Tokens[1], "EQU"))
+             {
 
+                //printf("AAAA 2222\n");
+                    listaAUX->tipoDeDefinicao = (char*)malloc(strlen("EQU")*sizeof(char));
+                    listaAUX->tipoDeDefinicao = "EQU";
+                    listaAUX->valorDeDefinicao = atoi(linha->Tokens[2]);
+                    //printf("BBBB 2222\n");
+
+             }
+             else
+         {
+
+                listaAUX->tipoDeDefinicao = (char*)malloc(strlen("LABEL")*sizeof(char));
+                listaAUX->tipoDeDefinicao = "LABEL";
+                listaAUX->valorDeDefinicao = pos;
          }
      }
     //printf("AAAAABBBBB\n");
@@ -1166,7 +1191,7 @@ TS* insereTS(infoLinha *linha, TS* listaTS,  char *nome, int pos, int Numlinha)
     int defini = verificaSeDefiniToken(nome);
     //printf("definido = %d string = %s",definido, nome);
     //printf("defini = %d, nome = %s, nomeLabel = %s\n",defini, nome, nomeLabel);
-    //if(!(!strcmp(nomeLabel,"+") && !strcmp(nomeLabel,"-")))
+    //if(!(!s!strcmp(linha->Tokens[1], "EQU")trcmp(nomeLabel,"+") && !strcmp(nomeLabel,"-")))
 if(verificaSeOpAritmeticaLabel(linha))
     op = 1;
 
@@ -1189,29 +1214,55 @@ if(verificaSeMaisOuMenos(nome))
      
      if(linha->numTokens >=2)
      {
+        //printf("AQUI = %s\n", linha->Tokens[1]);
          if(!strcmp(linha->Tokens[1], "SPACE"))
          {
 
             if(linha->numTokens == 3)
             {
-                printf("AAAA\n");
+                //printf("AAAA\n");
                 listaAUX->tipoDeDefinicao = (char*)malloc(strlen("SPACE")*sizeof(char));
                 listaAUX->tipoDeDefinicao = "SPACE";
                 listaAUX->valorDeDefinicao = atoi(linha->Tokens[2]);
-                printf("BBBB\n");
+              //  printf("BBBB\n");
 
             }
             else if(linha->numTokens == 2)
             {
-                printf("CCCCC\n");
+            // printf("CCCCC\n");
                 listaAUX->tipoDeDefinicao = (char*)malloc(strlen("SPACE")*sizeof(char));
                 listaAUX->tipoDeDefinicao = "SPACE";
                 listaAUX->valorDeDefinicao = 1;
 
-                printf("DDDDD\n");
+             //    printf("DDDDD\n");
             }
 
 
+         }
+         else if(!strcmp(linha->Tokens[1], "CONST")) 
+         {
+            //    printf("AAAA 1111\n");
+                listaAUX->tipoDeDefinicao = (char*)malloc(strlen("CONST")*sizeof(char));
+                listaAUX->tipoDeDefinicao = "CONST";
+                listaAUX->valorDeDefinicao = atoi(linha->Tokens[2]);
+          //      printf("BBBB 1111\n");
+         }
+         else if(!strcmp(linha->Tokens[1], "EQU"))
+         {
+
+            //printf("AAAA 2222\n");
+                listaAUX->tipoDeDefinicao = (char*)malloc(strlen("EQU")*sizeof(char));
+                listaAUX->tipoDeDefinicao = "EQU";
+                listaAUX->valorDeDefinicao = atoi(linha->Tokens[2]);
+              //  printf("BBBB 2222\n");
+
+         }
+         else
+         {
+
+                listaAUX->tipoDeDefinicao = (char*)malloc(strlen("LABEL")*sizeof(char));
+                listaAUX->tipoDeDefinicao = "LABEL";
+                listaAUX->valorDeDefinicao = pos;
          }
      }
      
