@@ -127,13 +127,15 @@ assembly* carregaMenmonicos(assembly *listaAssembly)
 }
 
 //funcao principal do modulo que gera o cógigo objeto, porem ainda não resolve as pendencias
-// void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Bool primeiraVez)
-void Sintese (infoLinha *linha, char *nomeArquivoSaida, _Bool primeiraVez)
+void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Bool primeiraVez)
+// void Sintese (infoLinha *linha, char *nomeArquivoSaida, _Bool primeiraVez)
 {
 	_Bool status;
 	assembly *listaAssembly = NULL, *resultadoBuscaAssembly;
 	TS *resultadoBuscaSimbolo;
 	FILE *saida;
+	char *EhValido;
+	int valor;
 
 	listaAssembly = carregaMenmonicos(listaAssembly);
 
@@ -160,16 +162,23 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, _Bool primeiraVez)
 		{
 			fprintf(saida, "%d ", resultadoBuscaAssembly->codigo);
 		}
-		// else{
-		// 	//se nao for instrucao ele procura na tabela de simbolo
-		// 	resultadoBuscaSimbolo = buscaSimbolo(TabelaSimbolos, linha->Tokens[i]);
+		else{
 
-		// 	//se for um simbolo ele grava
-		// 	if (resultadoBuscaSimbolo != NULL)
-		// 	{
-		// 		fprintf(saida, "%d ", resultadoBuscaSimbolo->valor);
-		// 	}
-		// }
+			EhValido = strstr(linha->Tokens[i], ":");
+
+			if (EhValido == NULL)
+			{
+				//se nao for instrucao ele procura na tabela de simbolo
+				resultadoBuscaSimbolo = buscaSimbolo(TabelaSimbolos, linha->Tokens[i]);
+
+				//se for um simbolo ele grava
+				if (resultadoBuscaSimbolo != NULL)
+				{
+					valor = resultadoBuscaSimbolo->valor + resultadoBuscaSimbolo->offset;
+					fprintf(saida, "%d ", valor);
+				}
+			}
+		}
 	}
 
 
@@ -180,7 +189,7 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, _Bool primeiraVez)
 }
 
 //funcao que resolve as pensadencias da tabela de simbolos
-// void resolvePendencia(char *nomeArquivoSaida, TS *TabelaSimbolos)
+void resolvePendencia(char *nomeArquivoSaida, TS *TabelaSimbolos)
 void resolvePendencia(char *nomeArquivoSaida, int posicao)
 {
 	FILE *saida;

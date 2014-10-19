@@ -45,7 +45,7 @@ int main(int argc, char const *argv[])
 
 		 j++;
 
-		 tabelaSims = retornaTabelaSimbolos(linha, tabelaSims,  posicao);
+		tabelaSims = retornaTabelaSimbolos(linha, tabelaSims,  posicao);
 		if(!verificaSections(linha))
 		posicao+= linha->numTokens;
        //fim Analise Lexica
@@ -54,8 +54,8 @@ int main(int argc, char const *argv[])
 
 
 		//chamando a funcao de sintese para gerar o codigo objeto
-		//Sintese (linha, arqSaida, tabelaSims, primeiraVez);
-		Sintese (linha, arqSaida, primeiraVez);
+		Sintese (linha, arqSaida, tabelaSims, primeiraVez);
+		// Sintese (linha, arqSaida, primeiraVez);
 		
 	}
 	printfTS(tabelaSims);
