@@ -11,6 +11,7 @@ codigo* insereLinha(codigo* listaCodigo, char *linha, int posicao);
 codigo* lendoLinha(FILE *arquivoEntrada, codigo *implementacao);
 char* preparaLinha(char *linha);
 
+
 //função cujo motivo principal é o debug, pois imprimi na tela a lista encadeada
 void imprime (codigo* l)
 {
@@ -238,7 +239,7 @@ codigo* lendoLinha(FILE *arquivoEntrada, codigo *implementacao)
 {
 	char *linha, *linha_preparada, new_line, primeiro_token;
 	char *EhIf, *EhEqu;
-	int posicaoLinha = 0;
+	int posicaoLinha = 0, contadorIfs = 0, contadorEqus = 0;
 	se *listaIfs = NULL;
 	equ *listaEQUs = NULL;
 	fpos_t position;
@@ -289,6 +290,7 @@ codigo* lendoLinha(FILE *arquivoEntrada, codigo *implementacao)
 	}
 
 	implementacao = resolveIfs(listaIfs, listaEQUs, implementacao);
+
 
 	return implementacao;
 
