@@ -5,7 +5,7 @@
 #define NumDire 9
 
 #include "M_Analise.h"
-#include "testeLuiz.h"
+//#include "testeLuiz.h"
 
 
 // typedef struct 
@@ -2010,6 +2010,9 @@ void AnaliseSemanticaOpAlocacaoMemoria(opLinha * linha, TS * tabelaSims)
 */
 void AnaliseSemanticaOpCopy(opLinha * linha, TS * tabelaSims)
 {
+ int i = linha->posInicial;
+    int fim = i + linha->numArgs;
+    
  
 
 
@@ -2023,6 +2026,9 @@ void AnaliseSemanticaOpCopy(opLinha * linha, TS * tabelaSims)
 
 void AnaliseSematicaOpSection(opLinha * linha, TS * tabelaSims)
 {
+    int i = linha->posInicial;
+    int fim = i + linha->numArgs;
+ 
  
 
 }
@@ -2030,6 +2036,7 @@ void AnaliseSematicaOpSection(opLinha * linha, TS * tabelaSims)
 
 void analiseSemantica(opLinha * linha, TS * tabelaSims)
 {
+
 
 //     struct opLinha
 // {
