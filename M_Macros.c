@@ -8,7 +8,7 @@
 //funcoes auxiliares para o modulo
 void gravaLinha(char *, char *);
 macro* insereMacro(macro* listaMacro, char *nome, linha_Macro *listaLinhaMacro);
-void lendoLinha(FILE *arquivoEntrada, char *NomeArquivoSaida);
+void lendoLinhaMacro(FILE *arquivoEntrada, char *NomeArquivoSaida);
 char * separaTokens(char *PrimeiroToken, char *SegundoToken, char *linha);
 macro* buscaMacro (macro* listaMacros, char *nome);
 macro* guardandoMacro(macro *macro, FILE *arquivoEntrada, char *linha);
@@ -102,7 +102,7 @@ linha_Macro* tamanhoCodigo (linha_Macro *lista)
 }
 
 //funccao que le o arquivo e avalia se é uma macro ou nao
-void lendoLinha(FILE *arquivoEntrada, char *NomeArquivoSaida)
+void lendoLinhaMacro(FILE *arquivoEntrada, char *NomeArquivoSaida)
 {
 	char *linha, *ehMacro;
 	macro *macro = NULL, *resultadoBusca;
@@ -198,7 +198,7 @@ void resolveMacro (char *nomeArquivoEntrada, char *nomeArquivoSaida)
 
 	if (arquivoEntrada != NULL && arquivoSaida != NULL)
 	{
-		lendoLinha(arquivoEntrada, nomeArquivoSaida);
+		lendoLinhaMacro(arquivoEntrada, nomeArquivoSaida);
 
 		fclose(arquivoEntrada);
 
