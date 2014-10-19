@@ -31,10 +31,25 @@ typedef struct
 struct pilhaPos
 {
     int pos;
+    int linha;
+//    int posInicial;
     struct pilhaPos * pilhaPosProx ;
 };
 
+
 typedef struct pilhaPos pilhaPos;
+
+struct opLinha
+{
+   int linha;
+   char * operacao;
+   char ** args;
+   int numArgs;
+   int posInicial;
+   struct opLinha* opLinhaProx;
+};
+
+typedef struct opLinha opLinha; 
 
 struct ts 
 {
@@ -45,6 +60,7 @@ struct ts
     int valor;
     int def;
     int valido;
+    int offset;
     char * tipoDeDefinicao;
     int valorDeDefinicao;
     struct ts * prox;
