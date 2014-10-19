@@ -12,13 +12,15 @@ extern infoLinha * Linhas;
 
 extern TS * tabelaSims;
 
+extern opLinha * linhas;
+
 int Analise (infoLinha *, FILE *, TS*, int *);
 
 infoLinha * EscreveNumLinha(infoLinha *, int);
 TS * insereSimbolo(TS * , char *,int , int , int *  );
 TS * retornaTabelaSimbolos(infoLinha * , TS * ,int ); //int * numSim)
 int verificaSections(infoLinha *linha);
-void AnaliseSintatica(infoLinha * linha, TS * tabelaSims);
+opLinha * AnaliseSintatica(infoLinha * linha, TS * tabelaSims, opLinha * linhas);
 
 void ini(infoLinha *);
 

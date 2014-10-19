@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include "M_Sintese.h"
+// #include "M_Sintese.h"
 #include "testeLuiz.h"
 #include "M_Analise.h"
 
@@ -22,6 +22,9 @@ int main(int argc, char const *argv[])
 	//posicao = (int*)malloc(1*sizeof(int));
 	posicao = 0;
 	TS * tabelaSims = NULL;
+    opLinha * linhas = NULL;
+		
+
 	//tabelaSims = NULL;
 	int * numSim;
 	numSim = (int *)malloc(1*sizeof(int));
@@ -51,11 +54,13 @@ int main(int argc, char const *argv[])
 		EscreveNumLinha(linha, j);
 		j++;// NAO APAGAR  ISSO !!!!
 		tabelaSims = retornaTabelaSimbolos(linha, tabelaSims,  posicao);
+
+
 		if(!verificaSections(linha))
 		posicao+= linha->numTokens;
        //fim Analise Lexica
 
-		AnaliseSintatica( linha, tabelaSims);
+		linhas = AnaliseSintatica( linha, tabelaSims,linhas);
 
 
 		//printfTS(tabelaSims);
