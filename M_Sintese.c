@@ -138,6 +138,8 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, int 
 	char *EhValido;
 	int valor;
 
+	printf("LINHA RECEBIDA = %s\n", linha->linha);
+
 	listaAssembly = carregaMenmonicos(listaAssembly);
 
 
@@ -176,9 +178,9 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, int 
 				//se for um simbolo ele grava
 				if (resultadoBuscaSimbolo != NULL)
 				{
-					printf("SIMBOLO EhValido = %s\n", linha->Tokens[i]);
-					printf("Valor = %d\n", resultadoBuscaSimbolo->valor);
-					printf("OFFSET = %d\n", resultadoBuscaSimbolo->offset);
+					// printf("SIMBOLO EhValido = %s\n", linha->Tokens[i]);
+					// printf("Valor = %d\n", resultadoBuscaSimbolo->valor);
+					// printf("OFFSET = %d\n", resultadoBuscaSimbolo->offset);
 
 					valor = resultadoBuscaSimbolo->valor;
 
@@ -217,8 +219,8 @@ void resolveIndefinicoes(char *nomeArquivoSaida, TS *TabelaSimbolos)
 
  	for (simbolo = TabelaSimbolos; simbolo!= NULL; simbolo = simbolo->prox)
  	{
- 		printf("SIMBOLO = %s\n", simbolo->nome);
- 		printf("VALOR = %d\n", simbolo->valor);
+ 		// printf("SIMBOLO = %s\n", simbolo->nome);
+ 		// printf("VALOR = %d\n", simbolo->valor);
  
  		for (pilha = simbolo->pilhaDePosicoes; pilha != NULL; pilha = pilha->pilhaPosProx)
  		{
@@ -246,7 +248,7 @@ void resolvePendencia(char *nomeArquivoSaida, int posicao, int valor)
 	
 	saida = fopen (nomeArquivoSaida, "r+");
 
-	printf("POSICAO = %d\n", posicao);
+	// printf("POSICAO = %d\n", posicao);
 
 	// while(contPosicao < posicao)
 	// {

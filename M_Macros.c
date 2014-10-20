@@ -17,16 +17,16 @@ linha_Macro* insereLinhaMacro(linha_Macro* listaLinhaMacro, char *linha);
 linha_Macro* tamanhoCodigo (linha_Macro *);
 
 
-//funcao para salvar no arquivo de erros, caso o programador nao defina o final da macro
-void EscreveArgErro(int linha)
-{
+// //funcao para salvar no arquivo de erros, caso o programador nao defina o final da macro
+// void EscreveArgErro(int linha)
+// {
 
-    FILE *argErros = fopen("erros.txt", "a");
+//     FILE *argErros = fopen("erros.txt", "a");
     
 
-    fprintf(argErros, "4 %d |", linha);
-    fclose(argErros);
-}
+//     fprintf(argErros, "4 %d |", linha);
+//     fclose(argErros);
+// }
 
 //funcao para gravar linhas normais 
 void gravaLinha(char *NomeArquivoSaida, char *linha)
