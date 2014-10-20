@@ -4,37 +4,9 @@
 #define NumInstr 14
 #define NumDire 9
 
-#include "M_Analise.h"
-//#include "testeLuiz.h"
+//#include "M_Analise.h"
+#include "testeLuiz.h"
 
-
-// typedef struct 
-// {
-//     int numTokens;
-//     int numChars;
-//     int numLinha;
-//     char * linha;
-//     char **Tokens;pul
-   
-
-// }infoLinha;
-
-// typedef struct
-// {
-//     int numAparicoes;
-//     int * Val;
-//     char * nome;
-
-// }ListaSim;
-
-// typedef struct 
-// {
-//     ListaSim simbolo;
-//     int valor;
-//     int def;
-//     int valido;
-
-// }TS;
 
 
 
@@ -1944,7 +1916,7 @@ return linhas;
 
 
 
-void AnaliseSemanticaOpAritmetica(opLinha * linha, TS * lista)
+void AnaliseSemanticaOpAritmetica(opLinha * linha, TS * lista,int *  posSections)
 {
 
     int i = linha->posInicial;
@@ -1965,6 +1937,20 @@ void AnaliseSemanticaOpAritmetica(opLinha * linha, TS * lista)
   
     if(teste)
     {
+
+        if(posSections[0] < posSections[1])
+        {
+            if(linha->linha > posSections[0] && linha->linha <posSections[1])
+            EscreveArgErro(linha->linha, 3);
+        
+        }
+        else 
+        {
+
+            if(linha->linha > posSections[0])
+            EscreveArgErro(linha->linha, 3);
+
+        }
     //printf("AQUI3");
             if(linha->numArgs > 2)
             {
@@ -2091,7 +2077,7 @@ void AnaliseSemanticaOpAritmetica(opLinha * linha, TS * lista)
 //instrucoes[9] = "LOAD";// = 10,
 //instrucoes[10] = "STORE";// = 11,
     
-void AnaliseSemanticaOpMemoria(opLinha * linha, TS * lista)
+void AnaliseSemanticaOpMemoria(opLinha * linha, TS * lista,int *  posSections)
 {
 
    
@@ -2106,7 +2092,22 @@ void AnaliseSemanticaOpMemoria(opLinha * linha, TS * lista)
        //printf("BBBBB\n");
  //       simbolo = NULL;
         //printf("AQUI args = %s\n",linha->args[i] );
-        if(verificaSeOpMemoria(linha->args[i]))
+    if(verificaSeOpMemoria(linha->args[i]))
+    {
+        if(posSections[0] < posSections[1])
+        {
+            if(linha->linha > posSections[0] && linha->linha <posSections[1])
+            EscreveArgErro(linha->linha, 3);
+        
+        }
+        else 
+        {
+
+            if(linha->linha > posSections[0])
+            EscreveArgErro(linha->linha, 3);
+
+        }
+
        for (j = i; j < fim; j++)
         {
            // printf("ENTREI AQAQQA\n");
@@ -2120,6 +2121,8 @@ void AnaliseSemanticaOpMemoria(opLinha * linha, TS * lista)
             }
             
         }
+
+    }
   
 
      //     printf("s =%s\n",s->nome );
@@ -2163,7 +2166,7 @@ void AnaliseSemanticaOpMemoria(opLinha * linha, TS * lista)
     // instrucoes[6] = "JMPP";// = 7,
     // instrucoes[7] = "JMPZ";// = 8,
 
-void AnaliseSemanticaOpPulo(opLinha * linha, TS * lista)
+void AnaliseSemanticaOpPulo(opLinha * linha, TS * lista,int *  posSections)
 {
 
  int i = linha->posInicial;
@@ -2177,6 +2180,23 @@ void AnaliseSemanticaOpPulo(opLinha * linha, TS * lista)
  //       simbolo = NULL;
      //   printf("AQUI args = %s\n",linha->args[i] );
        if(verificaSeOpPulo(linha->args[i]))
+       {
+
+        if(posSections[0] < posSections[1])
+        {
+            if(linha->linha > posSections[0] && linha->linha <posSections[1])
+            EscreveArgErro(linha->linha, 3);
+        
+        }
+        else 
+        {
+
+            if(linha->linha > posSections[0])
+            EscreveArgErro(linha->linha, 3);
+
+        }
+
+
        for (j = i; j < fim; j++)
         {
            // printf("ENTREI AQAQQA\n");
@@ -2189,6 +2209,7 @@ void AnaliseSemanticaOpPulo(opLinha * linha, TS * lista)
             }
             
         }
+    }
   
 
    //       printf("s =%s\n",s->nome );
@@ -2216,7 +2237,7 @@ void AnaliseSemanticaOpPulo(opLinha * linha, TS * lista)
     // instrucoes[12] = "OUTPUT";// = 13,
 
 
-void AnaliseSemanticaOpEntradaSaida(opLinha * linha, TS * lista)
+void AnaliseSemanticaOpEntradaSaida(opLinha * linha, TS * lista, int *  posSections)
 {
 
  int i = linha->posInicial;
@@ -2230,6 +2251,24 @@ void AnaliseSemanticaOpEntradaSaida(opLinha * linha, TS * lista)
  //       simbolo = NULL;
    //     printf("AQUI args = %s\n",linha->args[i] );
        if(verificaSeOpEntradaSaida(linha->args[i]))
+       {
+
+
+        if(posSections[0] < posSections[1])
+        {
+            if(linha->linha > posSections[0] && linha->linha <posSections[1])
+            EscreveArgErro(linha->linha, 3);
+        
+        }
+        else 
+        {
+
+            if(linha->linha > posSections[0])
+            EscreveArgErro(linha->linha, 3);
+
+        }
+
+        
        for (j = i; j < fim; j++)
         {
            // printf("ENTREI AQAQQA\n");
@@ -2242,6 +2281,7 @@ void AnaliseSemanticaOpEntradaSaida(opLinha * linha, TS * lista)
             }
             
         }
+    }
   
 
    //       printf("s =%s\n",s->nome );
@@ -2255,7 +2295,7 @@ void AnaliseSemanticaOpEntradaSaida(opLinha * linha, TS * lista)
             else
             {
 
-                if(strcmp(s->tipoDeDefinicao,"SPACE")|| strcmp(s->tipoDeDefinicao,"CONST")|| s->valido == 0)       
+                if(!(!strcmp(s->tipoDeDefinicao,"SPACE")|| !strcmp(s->tipoDeDefinicao,"CONST")|| s->valido == 1))       
                     EscreveArgErro(linha->linha, 3);
             }
          }
@@ -2272,16 +2312,32 @@ void AnaliseSemanticaOpEntradaSaida(opLinha * linha, TS * lista)
     //     diretivas[1] = "SPACE";
     // diretivas[2] = "CONST";
     // diretivas[3] = "EQU";
- void AnaliseSemanticaOpAlocacaoMemoria(opLinha * linha, TS * lista, int secao)
+ void AnaliseSemanticaOpAlocacaoMemoria(opLinha * linha, TS * lista, int *  posSections)
  {
     int i = linha->posInicial;
     int fim = i + linha->numArgs;
      if(verificaSeOpAlocacaoMemoria(linha->args[i]))
      {
-        if(secao != 0)
+
+
+        if(posSections[0] < posSections[1])
         {
-        EscreveArgErro(linha->linha, 3);
+            if(linha->linha < posSections[0] || linha->linha > posSections[1])
+            EscreveArgErro(linha->linha, 3);
+        
         }
+        else 
+        {
+
+            if(linha->linha > posSections[1] && linha->linha < posSections[0] )
+            EscreveArgErro(linha->linha, 3);
+
+        }
+        // if(secao != 0)
+        // {
+        //     printf("AAAAAQQQQIIIII\n");
+        // EscreveArgErro(linha->linha, 3);
+        // }
      }
 
         
@@ -2290,7 +2346,7 @@ void AnaliseSemanticaOpEntradaSaida(opLinha * linha, TS * lista)
 
 /*  instrucoes[8] = "COPY";// = 9,
 */
-void AnaliseSemanticaOpCopy(opLinha * linha, TS * lista, int secao)
+void AnaliseSemanticaOpCopy(opLinha * linha, TS * lista, int * posSections)
 {
 
 
@@ -2312,9 +2368,19 @@ int i = linha->posInicial;
   
     if(teste)
     {
-        if(secao != 1)
+
+        if(posSections[0] < posSections[1])
         {
-        EscreveArgErro(linha->linha, 3);
+            if(linha->linha > posSections[0] && linha->linha <posSections[1])
+            EscreveArgErro(linha->linha, 3);
+        
+        }
+        else 
+        {
+
+            if(linha->linha > posSections[0])
+            EscreveArgErro(linha->linha, 3);
+
         }
 
   //       printf("AQUI3");
@@ -2381,19 +2447,47 @@ int i = linha->posInicial;
 }
 
 
-/*    diretivas[0] = "SECTION";
-    diretivas[7] = "DATA";
-    diretivas[8] = "TEXT";
-*/
 
-// void AnaliseSematicaOpSection(opLinha * linha, TS * tabelaSims)
-// {
-//     int i = linha->posInicial;
-//     int fim = i + linha->numArgs;
- 
- 
+int * procuraSections (opLinha * linha)
+{
+    opLinha * p;
+    p = (opLinha *) malloc(sizeof(opLinha));
+    int * pos = (int *)malloc(2*sizeof(int));
+   int i = 0;
+    pos[0] = -1;
+    pos[1] = -1;
+    p = linha;
+   
+    for(p = linha;p!=NULL;p = p->opLinhaProx)
+     {
+        i = p->posInicial;
+        
+         if(p->numArgs >= 2)
+         {
 
-// }
+
+//          printf("AQUI1111\n" );
+             if(!strcmp(p->args[i],"SECTION" ))
+             {
+//                printf("AQUI22222\n" );
+
+                if(!strcmp(p->args[i+1],"DATA" ))
+                {
+                   pos[0] = p->linha;
+                }
+                if(!strcmp(p->args[i+1],"TEXT" ))
+                {
+                    pos[1] = p->linha;
+                }
+
+             }
+         }
+     }
+
+             return pos;
+
+
+}    
 
 
 void analiseSemantica(opLinha * linha, TS * lista)
@@ -2404,49 +2498,35 @@ void analiseSemantica(opLinha * linha, TS * lista)
     int secao = -1;
     int acheiSectionText = 0;
     int acheiSectionData = 0;
-    
-    for(p = linha;p!=NULL;p = p->opLinhaProx)
-    {
-        if(p->numArgs == 2)
-        { printf("AQUI1111\n" );
-            if(!strcmp(p->args[0],"SECTION" ))
-            {
+    int * posSections = (int *)malloc(2*sizeof(int));
+
+    posSections =  procuraSections (linha);
+
+    printf("pos[0] = data = %d\n", posSections[0]);
+    printf("pos[1] = text = %d\n", posSections[1]);
+     for(p = linha;p!=NULL;p = p->opLinhaProx)
+     {
+               {
 
 
 
-                if(!strcmp(p->args[1],"DATA" ))
-                {
-                    secao = 0;
-                    acheiSectionData = 1;
-                }
-                if(!strcmp(p->args[1],"TEXT" ))
-                {
-                    acheiSectionText = 1;
-                    secao = 1;
-                }
+    //             
 
 
-            }
-        }
-printf("AQUI1\n");
-//     AnaliseSemanticaOpAritmetica(p, lista);
-  //   AnaliseSemanticaOpMemoria(p, lista);
-   //  AnaliseSemanticaOpPulo(p, lista);
-     AnaliseSemanticaOpCopy(p,lista,secao);
+    //         }
+         }
+//printf("AQUI1\n");
+
+         AnaliseSemanticaOpAlocacaoMemoria(p, lista, posSections);
+    AnaliseSemanticaOpAritmetica(p, lista, posSections);
+    AnaliseSemanticaOpMemoria(p, lista, posSections);
+    AnaliseSemanticaOpPulo(p, lista, posSections);
+     AnaliseSemanticaOpCopy(p,lista, posSections);
+     AnaliseSemanticaOpEntradaSaida(p,lista,posSections);
   //   printf("AQUI12345\n" );
     }
 
 //    printf("SAIIII\n");
-
-
-//     struct opLinha
-// {
-//    int linha;
-//    char * operacao;
-//    int numArgs;
-//    int posInicial;
-//    struct opLinha* opLinhaProx;
-// };
 
 
 
