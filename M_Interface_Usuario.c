@@ -39,20 +39,20 @@ int main(int argc, char const *argv[])
 	if (!strcmp(argv[1], "-p"))
 	{
 		resolvePreProcessamento(nomeEntrada, nomeSaidaPre);
-		// MostraErros();
+		MostraErros();
 	}
 	else if (!strcmp(argv[1], "-m"))
 	{
 		resolvePreProcessamento(nomeEntrada, nomeSaidaPre);
 		resolveMacro(nomeSaidaPre, nomeSaidaMacro);
-		// MostraErros();
+		MostraErros();
 	}
 	else if (!strcmp(argv[1], "-o"))
 	{
 		resolvePreProcessamento(nomeEntrada, nomeSaidaPre);
 		resolveMacro(nomeSaidaPre, nomeSaidaMacro);
 		resolvePassagemUnica(nomeSaidaMacro, nomeSaida);
-		// MostraErros();
+		MostraErros();
 	}
 	else
 	{

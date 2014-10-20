@@ -17,10 +17,10 @@ void MostraErros(void)
 
 	erros = fopen("erros.txt", "r");
 
+	fscanf(erros, "%d %d %c", &erro, &linha, &separador);
+
 	while(!feof(erros))
 	{
-		fscanf(erros, "%d %d %c", &erro, &linha, &separador);
-
 		switch(erro)
 		{
 			case 1:
@@ -42,6 +42,8 @@ void MostraErros(void)
 			default:
 				break;
 		}
+
+		fscanf(erros, "%d %d %c", &erro, &linha, &separador);
 	}
 
 	if (!temErro)
