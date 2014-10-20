@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "M_Sintese.h"
 #include "M_Passagem_Unica.h"
@@ -14,14 +15,22 @@ int main(int argc, char const *argv[])
 	char arqSaida[] = "SAIDA.txt";
 
 	infoLinha *linha;
-	FILE *ptr_file;
-	int i =0,j = 0, k, fim,m, posicao = 1, primeiraVez = 1;
+	FILE *ptr_file, *saida;
+	int i =0,j = 0, k, fim,m, posicao = 1;
+	int *primeiraVez;
 	TS * tabelaSims = NULL;
 	int * numSim;
 	opLinha * linhas = NULL;
 	numSim = (int *)malloc(1*sizeof(int));
 	numSim[0] = 0;
 
+
+	primeiraVez = (int*)malloc(sizeof(int));
+
+	primeiraVez[0] = 1;
+
+	saida = fopen (arqSaida, "w");
+	fclose(saida);
 	ptr_file =fopen(argv[1],"r");
 
     if (!ptr_file)
@@ -59,9 +68,11 @@ int main(int argc, char const *argv[])
 		// Sintese (linha, arqSaida, primeiraVez);
 		
 	}
-	printfTS(tabelaSims);
 
-
+	fclose(saida);
+	// printfTS(tabelaSims);
+	printf("#########################################################\n");
+	resolveIndefinicoes(arqSaida,tabelaSims);
 	//resolvePendencia(arqSaida, 3);
 	//resolvePendencia(arqSaida, 6);
 

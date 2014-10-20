@@ -10,6 +10,7 @@ assembly* insereAssembly(assembly* listaAssembly, char *mnemonico, int codigo, i
 void imprime (assembly* l);
 TS* buscaSimbolo (TS* lista, char *nome);
 assembly* buscaAssembly (assembly* lista, char *mnemonico);
+void resolvePendencia(char *nomeArquivoSaida, int posicao, int valor);
 
 
 //função que insere os mnemonicos de assembly em uma lista encadeada
@@ -127,7 +128,7 @@ assembly* carregaMenmonicos(assembly *listaAssembly)
 }
 
 //funcao principal do modulo que gera o cógigo objeto, porem ainda não resolve as pendencias
-void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Bool primeiraVez)
+void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, int *primeiraVez)
 // void Sintese (infoLinha *linha, char *nomeArquivoSaida, _Bool primeiraVez)
 {
 	_Bool status;
@@ -139,17 +140,8 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Boo
 
 	listaAssembly = carregaMenmonicos(listaAssembly);
 
-	//imprime (listaAssembly);
 
-	if (primeiraVez)
-	{
-		saida = fopen(nomeArquivoSaida, "a");
-		primeiraVez = 0;
-	}
-	else
-	{
-		saida = fopen (nomeArquivoSaida, "w");
-	}
+	saida = fopen(nomeArquivoSaida, "a");
 	
 
 	for (int i = 0; i < linha->numTokens; ++i)
@@ -160,11 +152,21 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Boo
 		//se o simbolo for uma instrucao ele grava
 		if (resultadoBuscaAssembly != NULL)
 		{
-			fprintf(saida, "%d ", resultadoBuscaAssembly->codigo);
+			if (resultadoBuscaAssembly->codigo > 9)
+			{
+				fprintf(saida, " %d", resultadoBuscaAssembly->codigo);
+			}
+			else
+			{
+				fprintf(saida, " 0%d", resultadoBuscaAssembly->codigo);	
+			}
+
+			
 		}
 		else{
 
 			EhValido = strstr(linha->Tokens[i], ":");
+
 
 			if (EhValido == NULL)
 			{
@@ -174,8 +176,27 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Boo
 				//se for um simbolo ele grava
 				if (resultadoBuscaSimbolo != NULL)
 				{
-					valor = resultadoBuscaSimbolo->valor + resultadoBuscaSimbolo->offset;
-					fprintf(saida, "%d ", valor);
+					printf("SIMBOLO EhValido = %s\n", linha->Tokens[i]);
+					printf("Valor = %d\n", resultadoBuscaSimbolo->valor);
+					printf("OFFSET = %d\n", resultadoBuscaSimbolo->offset);
+
+					valor = resultadoBuscaSimbolo->valor;
+
+					if (resultadoBuscaSimbolo->offset != 0)
+					{
+						valor = resultadoBuscaSimbolo->valor + resultadoBuscaSimbolo->offset +1;
+					}
+
+					if (valor < 0 || valor > 9)
+					{
+						fprintf(saida, " %d", valor);
+					}
+					else
+					{
+						fprintf(saida, " 0%d", valor);	
+					}
+					
+					
 				}
 			}
 		}
@@ -188,26 +209,64 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Boo
 	
 }
 
+
+void resolveIndefinicoes(char *nomeArquivoSaida, TS *TabelaSimbolos)
+{
+	TS* simbolo;
+	pilhaPos *pilha;
+
+ 	for (simbolo = TabelaSimbolos; simbolo!= NULL; simbolo = simbolo->prox)
+ 	{
+ 		printf("SIMBOLO = %s\n", simbolo->nome);
+ 		printf("VALOR = %d\n", simbolo->valor);
+ 
+ 		for (pilha = simbolo->pilhaDePosicoes; pilha != NULL; pilha = pilha->pilhaPosProx)
+ 		{
+ 			resolvePendencia(nomeArquivoSaida, pilha->pos, simbolo->valor);
+
+ 		}		
+ 	}
+
+}
+
+
 //funcao que resolve as pensadencias da tabela de simbolos
-void resolvePendencia(char *nomeArquivoSaida, TS *TabelaSimbolos)
-void resolvePendencia(char *nomeArquivoSaida, int posicao)
+// void resolvePendencia(char *nomeArquivoSaida, TS *TabelaSimbolos)
+void resolvePendencia(char *nomeArquivoSaida, int posicao, int valor)
 {
 	FILE *saida;
-	int numero, contPosicao = 0;
+	int numero, contPosicao = 0, seek;
+	char *subs, *token;
+	fpos_t position;
+	
+	subs = (char*)malloc(sizeof(char*));
+	token = (char*)malloc(sizeof(char*));
 
+	sprintf(subs, "%d", valor);
+	
 	saida = fopen (nomeArquivoSaida, "r+");
 
-	while(contPosicao < posicao)
-	{
-		fscanf(saida, "%d", &numero);
-		contPosicao++;
-		//printf("Numero = %d\n", numero);
-	}
+	printf("POSICAO = %d\n", posicao);
 
-	fseek(saida, 1, SEEK_CUR);
+	// while(contPosicao < posicao)
+	// {
+	// 	// fgetpos(saida, &position);
+	// 	fscanf(saida, "%s", token);
+	// 	contPosicao++;
+	// }
 
-	fprintf(saida, "77");
+	seek = (posicao-1) * 3;
 
+	fseek(saida, seek, SEEK_SET);
+
+	// fsetpos(saida, &position);
+
+	fprintf(saida, " %s" , subs);
+
+	// fprintf(saida, "77");
+
+	rewind(saida);
+	
 	fclose(saida);
 
 }

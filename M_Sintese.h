@@ -4,14 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//#include "M_Passagem_Unica.h"
+#include "M_Passagem_Unica.h"
 
 extern struct infoLinha *linha;
 extern struct TS *TabelaSimbolos;
 
-// void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, _Bool primeiraVez);
-void Sintese (infoLinha *linha, char *nomeArquivoSaida, _Bool primeiraVez);
-void resolvePendencia(char *nomeArquivoSaida, int posicao);
+void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, int *primeiraVez);
+void resolveIndefinicoes(char *nomeArquivoSaida, TS *TabelaSimbolos);
 
 struct Assembly
 {
