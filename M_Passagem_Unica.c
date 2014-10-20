@@ -12,8 +12,6 @@
 
 void resolvePassagemUnica(char *nomeEntrada, char *nomeSaida)
 {
-	char arqSaida[] = "SAIDA.txt";
-
 	infoLinha *linha;
 	FILE *ptr_file, *saida;
 	int i =0,j = 0, k, fim,m, posicao = 1;
@@ -31,8 +29,10 @@ void resolvePassagemUnica(char *nomeEntrada, char *nomeSaida)
 
 	saida = fopen (nomeSaida, "w");
 	fclose(saida);
+
 	ptr_file =fopen(nomeEntrada,"r");
 
+	//verifica se o arquivo para leitura foi aberto
     if (!ptr_file)
     {
         printf("Não foi possível abrir o arquivo para leitura/escrita.\nPor favor, tente novamente mais tarde.\n");
@@ -40,6 +40,7 @@ void resolvePassagemUnica(char *nomeEntrada, char *nomeSaida)
 
 	linha = (infoLinha *) malloc(1*sizeof(infoLinha));
 
+	//laco principal que le o arquivo de codigo
 	while(1)
 	{
 		fim = Analise (linha, ptr_file, tabelaSims, numSim);
@@ -59,15 +60,15 @@ void resolvePassagemUnica(char *nomeEntrada, char *nomeSaida)
 
 		linhas = AnaliseSintatica( linha, tabelaSims,linhas);
 		//chamando a funcao de sintese para gerar o codigo objeto
-		Sintese (linha, arqSaida, tabelaSims, primeiraVez);
+		Sintese (linha, nomeSaida, tabelaSims, primeiraVez);
 		
 	}
 	fclose(saida);
 
 	analiseSemantica(linhas, tabelaSims);
 
-
-	resolveIndefinicoes(arqSaida,tabelaSims);
+	//resolvendo as indefinicoes de simbolos do codigo objeto
+	resolveIndefinicoes(nomeSaida,tabelaSims);
 
 	fclose(ptr_file);
 }

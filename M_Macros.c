@@ -175,7 +175,7 @@ macro* guardandoMacro(macro *macro, FILE *arquivoEntrada, char *linha)
 
 	fscanf(arquivoEntrada, "%[^\n]%*c", linhaMacro);
 
-	while(!feof(arquivoEntrada) && strcmp(linhaMacro, "ENDMACRO"))
+	while(!feof(arquivoEntrada) && strcmp(linhaMacro, "END"))
 	{
 		linhaCodigo = insereLinhaMacro(linhaCodigo, linhaMacro);
 		fscanf(arquivoEntrada, "%[^\n]%*c", linhaMacro);

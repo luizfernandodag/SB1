@@ -50,6 +50,10 @@ int main(int argc, char const *argv[])
 		resolveMacro(nomeSaidaPre, nomeSaidaMacro);
 		resolvePassagemUnica(nomeSaidaMacro, nomeSaida);
 	}
+	else
+	{
+		printf("Comando inválido!\nPor favor tente novamente mais tarde ;)\n");
+	}
 
 	return 0;
 }

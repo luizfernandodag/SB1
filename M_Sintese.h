@@ -22,7 +22,6 @@ struct Assembly
 
 typedef struct Assembly assembly;
 
-//void pegaLista(struct Teste *, int);
 
 
 #endif
