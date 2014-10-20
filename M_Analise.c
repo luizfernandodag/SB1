@@ -4,8 +4,8 @@
 #define NumInstr 14
 #define NumDire 9
 
-//#include "M_Analise.h"
-#include "testeLuiz.h"
+#include "M_Analise.h"
+//#include "testeLuiz.h"
 
 
 
