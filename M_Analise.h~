@@ -6,11 +6,26 @@
 #include <string.h>
 
 #include "M_Passagem_Unica.h"
+//#include "testeLuiz.h"
 
 extern infoLinha * Linhas;
 
-infoLinha * Analise (infoLinha *, FILE *);
+extern TS * tabelaSims;
 
-void ini(infoLinha *)
+extern opLinha * linhas;
+
+int Analise (infoLinha *, FILE *, TS*, int *);
+
+infoLinha * EscreveNumLinha(infoLinha *, int);
+TS * insereSimbolo(TS * , char *,int , int , int *  );
+TS * retornaTabelaSimbolos(infoLinha * , TS * ,int ); //int * numSim)
+int verificaSections(infoLinha *linha);
+opLinha * AnaliseSintatica(infoLinha * linha, TS * tabelaSims, opLinha * linhas);
+
+void ini(infoLinha *);
+void printfOpLinha(opLinha * lista);
+int contaSomaPos(infoLinha * linha);
+
+void analiseSemantica(opLinha * linha, TS * lista);
 
 #endif

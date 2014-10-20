@@ -2408,9 +2408,11 @@ void analiseSemantica(opLinha * linha, TS * lista)
     for(p = linha;p!=NULL;p = p->opLinhaProx)
     {
         if(p->numArgs == 2)
-        {
+        { printf("AQUI1111\n" );
             if(!strcmp(p->args[0],"SECTION" ))
             {
+
+
 
                 if(!strcmp(p->args[1],"DATA" ))
                 {
@@ -2426,10 +2428,10 @@ void analiseSemantica(opLinha * linha, TS * lista)
 
             }
         }
-//printf("AQUI1\n");
-     AnaliseSemanticaOpAritmetica(p, lista);
-     AnaliseSemanticaOpMemoria(p, lista);
-     AnaliseSemanticaOpPulo(p, lista);
+printf("AQUI1\n");
+//     AnaliseSemanticaOpAritmetica(p, lista);
+  //   AnaliseSemanticaOpMemoria(p, lista);
+   //  AnaliseSemanticaOpPulo(p, lista);
      AnaliseSemanticaOpCopy(p,lista,secao);
   //   printf("AQUI12345\n" );
     }
