@@ -1,0 +1,42 @@
+Programa: Montador do assembly inventado
+
+Desenvolvedores: Laís Mendes Gonçalves - 11/0033647
+		 Luiz Fernando de Andrade Gadêlha - 09/0010213
+
+####################################################################################################################################################################################
+
+####Funcionalidade do programa:
+	Esse programa tem como finalidade gerar o código objeto da linguagem Assembly, inventada em sala de aula, para fins didáticos, pelo professor Bruno Macchiavello.
+	Esta versão comporta o uso de 3 tipos de diretiva na hora da sua execução. Elas são:
+	-p: com essa diretiva o resultado é apenas um arquivo texto, com extensão .pre, com as diretivas IF e EQU avaliadas, ou seja, o pré-processamento é feito;
+	-m: com essa diretiva o resultado são 2 arquivos texto, um com o resultado do pré-processamento, e outro onde as macros foram substituídas, com a extensão .mcr;
+	-o: com essa diretiva, obtemos 3 arquivos texto. Os dois das diretivas anteriores, e um com o código objeto final, da implementação do Assembly, com extensão .o.
+
+
+####Compilação:
+	Para compilar essa versão, é preciso deixar na pasta, junto com os códigos fontes, o arquivo erros.txt (que já existe e está junto com os códigos, basta não apagar), e o arquivo assembly.txt (que também já existe e está junto com os códigos, basta não apagar).
+	Usando um gcc na versão 4.2 ou superior, pelo terminal do seu computador, entre na pasta onde estão os códigos e os arquivos citados à cima, e realize o seguinte comando e aperte enter:
+
+	gcc M_Interface_Usuario.c M_Pre_Processamento.c M_Macros.c M_Passagem_Unica.c M_Analise.c M_Sintese.c M_Erros.c -o montador
+
+
+####Execução:
+	Para executar essa versão do programa, escreva um código usando a linguagem Assembly inventado, salve na extensão .asm (exemplo: teste.asm), e coloque na pasta do projeto, junto com os códigos fonte.
+	Pelo terminal do seu computador, vá para a pasta do projeto e realize um dos seguintes comandos, de acordo com a diretiva da sua escolha, e aperte enter:
+
+	./montador -p teste resultado 
+			OU
+	./montador -m teste resultado 
+			OU
+	./montador -o teste resultado 
+
+	onde, “teste” é o nome do arquivo de entrada com extensão .asm, porém não se coloca a extensão, e “resultado” é o nome escolhido, nesse caso, para nomear o(s) arquivo(s) de saída. Lembrando que os nomes dos arquivos “teste.asm” e “resultado” foram escolhidos por nós, você poderá escolher qualquer um.
+
+
+####Dúvidas:
+	Para mais informações sobre o projeto, dificuldade de compilação ou execução, elogios, dúvidas, pode enviar um e-mail para algum dos endereços eletrônicos a baixo, e entraremos em contato:
+	laismendes0777@gmail.com
+	luizfernandodag@gmail.com
+
+OBRIGAD@, ATÉ A PRÓXIMA!
+ 
