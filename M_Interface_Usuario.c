@@ -46,7 +46,9 @@ int main(int argc, char const *argv[])
 	}
 	else if (!strcmp(argv[1], "-o"))
 	{
-		/* code */
+		resolvePreProcessamento(nomeEntrada, nomeSaidaPre);
+		resolveMacro(nomeSaidaPre, nomeSaidaMacro);
+		resolvePassagemUnica(nomeSaidaMacro, nomeSaida);
 	}
 
 	return 0;

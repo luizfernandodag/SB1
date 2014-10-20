@@ -12,19 +12,19 @@ codigo* lendoLinha(FILE *arquivoEntrada, codigo *implementacao);
 char* preparaLinha(char *linha);
 
 
-//função cujo motivo principal é o debug, pois imprimi na tela a lista encadeada
-void imprime (codigo* l)
-{
-	codigo* p;
-	int i = 0;
-	for (p = l; p != NULL; p = p->pl)
-	{
-		printf("linha[%d] = %s\n",p->posicao, p->linha);
+// //função cujo motivo principal é o debug, pois imprimi na tela a lista encadeada
+// void imprime (codigo* l)
+// {
+// 	codigo* p;
+// 	int i = 0;
+// 	for (p = l; p != NULL; p = p->pl)
+// 	{
+// 		printf("linha[%d] = %s\n",p->posicao, p->linha);
 
-		i++;
-	}
+// 		i++;
+// 	}
 	
-}
+// }
 
 //função cujo motivo principal é o debug, pois imprimi na tela a lista encadeada
 void imprimeIfs (se* l)
@@ -40,7 +40,7 @@ void imprimeIfs (se* l)
 }
 
 //funcao que transforma tudo em maiuscula
-char * maiuscula(char *string)
+char * maiusculaPre(char *string)
 {
     int i, tamanho;
     char *stringOut, *stringAux;
@@ -260,7 +260,7 @@ codigo* lendoLinha(FILE *arquivoEntrada, codigo *implementacao)
 			fscanf(arquivoEntrada, "%c", &new_line);
 
 			linha_preparada = preparaLinha(linha);
-			linha_preparada = maiuscula(linha_preparada);
+			linha_preparada = maiusculaPre(linha_preparada);
 
 			EhIf = strstr(linha_preparada, "IF");
 

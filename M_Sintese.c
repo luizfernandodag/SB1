@@ -51,22 +51,22 @@ TS* buscaSimbolo (TS* lista, char *nome)
  	return NULL;
 }
 
-//função cujo motivo principal é o debug, pois imprimi na tela a lista encadeada
-void imprime (assembly* l)
-{
-	assembly* p;
-	int i = 0;
-	for (p = l; p != NULL; p = p->pa)
-	{
-		printf("i = %d\n", i);
-		printf("mnemonico = %s\n", p->mnemonico);
-		printf("codigo = %d\n", p->codigo);
-		printf("tamanho = %d\n", p->tamanho);	
+// //função cujo motivo principal é o debug, pois imprimi na tela a lista encadeada
+// void imprime (assembly* l)
+// {
+// 	assembly* p;
+// 	int i = 0;
+// 	for (p = l; p != NULL; p = p->pa)
+// 	{
+// 		printf("i = %d\n", i);
+// 		printf("mnemonico = %s\n", p->mnemonico);
+// 		printf("codigo = %d\n", p->codigo);
+// 		printf("tamanho = %d\n", p->tamanho);	
 
-		i++;
-	}
+// 		i++;
+// 	}
 	
-}
+// }
 
 //funcao principal que constroi a lista encadeada de mnemonicos
 assembly* carregaMenmonicos(assembly *listaAssembly)
@@ -135,8 +135,10 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, int 
 	assembly *listaAssembly = NULL, *resultadoBuscaAssembly;
 	TS *resultadoBuscaSimbolo;
 	FILE *saida;
-	char *EhValido;
+	char *EhValido, *EhData;
 	int valor;
+
+	// printf("LINHA RECEBIDA = %s\n", linha->linha);
 
 	listaAssembly = carregaMenmonicos(listaAssembly);
 
@@ -160,8 +162,6 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, int 
 			{
 				fprintf(saida, " 0%d", resultadoBuscaAssembly->codigo);	
 			}
-
-			
 		}
 		else{
 
@@ -176,16 +176,16 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, int 
 				//se for um simbolo ele grava
 				if (resultadoBuscaSimbolo != NULL)
 				{
-					printf("SIMBOLO EhValido = %s\n", linha->Tokens[i]);
-					printf("Valor = %d\n", resultadoBuscaSimbolo->valor);
-					printf("OFFSET = %d\n", resultadoBuscaSimbolo->offset);
+					// printf("SIMBOLO EhValido = %s\n", linha->Tokens[i]);
+					// printf("Valor = %d\n", resultadoBuscaSimbolo->valor);
+					// printf("OFFSET = %d\n", resultadoBuscaSimbolo->offset);
 
-					valor = resultadoBuscaSimbolo->valor;
+					// valor = resultadoBuscaSimbolo->valor;
 
-					if (resultadoBuscaSimbolo->offset != 0)
-					{
+					// if (resultadoBuscaSimbolo->offset != 0)
+					// {
 						valor = resultadoBuscaSimbolo->valor + resultadoBuscaSimbolo->offset +1;
-					}
+					// }
 
 					if (valor < 0 || valor > 9)
 					{
@@ -195,8 +195,43 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, int 
 					{
 						fprintf(saida, " 0%d", valor);	
 					}
-					
-					
+				}
+			}
+
+			EhData = strstr(linha->Tokens[i], "CONST");
+
+			if(EhData != NULL)
+			{
+				valor = atoi(linha->Tokens[i+1]);
+
+				if (valor < 0 || valor > 9)
+				{
+					fprintf(saida, " %d", valor);
+				}
+				else
+				{
+					fprintf(saida, " 0%d", valor);	
+				}
+			}
+
+			EhData = strstr(linha->Tokens[i], "SPACE");
+
+			if(EhData != NULL)
+			{
+				if (i+1 == linha->numTokens)
+				{
+					fprintf(saida, " XX");
+				}
+				else
+				{
+					valor = atoi(linha->Tokens[i+1]);
+
+					printf("QUANT = %d\n", valor);
+
+					for (int i = 0; i < valor; ++i)
+					{
+						fprintf(saida, " XX");
+					}
 				}
 			}
 		}
@@ -242,7 +277,7 @@ void resolvePendencia(char *nomeArquivoSaida, int posicao, int valor)
 	subs = (char*)malloc(sizeof(char*));
 	token = (char*)malloc(sizeof(char*));
 
-	sprintf(subs, "%d", valor);
+	// sprintf(subs, "%d", valor);
 	
 	saida = fopen (nomeArquivoSaida, "r+");
 
@@ -259,7 +294,13 @@ void resolvePendencia(char *nomeArquivoSaida, int posicao, int valor)
 
 	fseek(saida, seek, SEEK_SET);
 
-	// fsetpos(saida, &position);
+	fscanf(saida, "%s", token);
+	rewind(saida);
+
+	fseek(saida, seek, SEEK_SET);
+
+	valor = valor + atoi(token);
+	sprintf(subs, "%d", valor);
 
 	fprintf(saida, " %s" , subs);
 
