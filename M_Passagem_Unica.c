@@ -14,6 +14,8 @@ void resolvePassagemUnica(char *nomeEntrada, char *nomeSaida)
 {
 	infoLinha *linha;
 	FILE *ptr_file, *saida;
+	FILE *argErros = fopen("erros.txt", "w");
+	fclose(argErros);        
 	int i =0,j = 0, k, fim,m, posicao = 1;
 	int *primeiraVez;
 	TS * tabelaSims = NULL;
