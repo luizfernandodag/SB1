@@ -4,8 +4,8 @@
 #define NumInstr 14
 #define NumDire 9
 
-//#include "M_Analise.h"
-#include "testeLuiz.h"
+#include "M_Analise.h"
+//#include "testeLuiz.h"
 
 
 // typedef struct 
@@ -2411,6 +2411,8 @@ void analiseSemantica(opLinha * linha, TS * lista)
         { printf("AQUI1111\n" );
             if(!strcmp(p->args[0],"SECTION" ))
             {
+
+
 
                 if(!strcmp(p->args[1],"DATA" ))
                 {
