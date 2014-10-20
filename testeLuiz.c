@@ -87,6 +87,7 @@ int main(int argc, char const *argv[])
 	printfTS(tabelaSims);
 
     printfOpLinha( linhas);
+    analiseSemantica( linhas, tabelaSims);
 	// listaNo = (struct Teste *) malloc(1*sizeof(struct Teste));
 
 	// pegaLista(lista, 10);

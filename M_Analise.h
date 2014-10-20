@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "M_Passagem_Unica.h"
-//#include "testeLuiz.h"
+//#include "M_Passagem_Unica.h"
+#include "testeLuiz.h"
 
 extern infoLinha * Linhas;
 
@@ -25,5 +25,7 @@ opLinha * AnaliseSintatica(infoLinha * linha, TS * tabelaSims, opLinha * linhas)
 void ini(infoLinha *);
 void printfOpLinha(opLinha * lista);
 int contaSomaPos(infoLinha * linha);
+
+void analiseSemantica(opLinha * linha, TS * lista);
 
 #endif
