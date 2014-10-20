@@ -4,8 +4,8 @@
 #define NumInstr 14
 #define NumDire 9
 
-#include "M_Analise.h"
-//#include "testeLuiz.h"
+//#include "M_Analise.h"
+#include "testeLuiz.h"
 
 
 // typedef struct 
@@ -2408,7 +2408,7 @@ void analiseSemantica(opLinha * linha, TS * lista)
     for(p = linha;p!=NULL;p = p->opLinhaProx)
     {
         if(p->numArgs == 2)
-        {
+        { printf("AQUI1111\n" );
             if(!strcmp(p->args[0],"SECTION" ))
             {
 
@@ -2426,10 +2426,10 @@ void analiseSemantica(opLinha * linha, TS * lista)
 
             }
         }
-//printf("AQUI1\n");
-     AnaliseSemanticaOpAritmetica(p, lista);
-     AnaliseSemanticaOpMemoria(p, lista);
-     AnaliseSemanticaOpPulo(p, lista);
+printf("AQUI1\n");
+//     AnaliseSemanticaOpAritmetica(p, lista);
+  //   AnaliseSemanticaOpMemoria(p, lista);
+   //  AnaliseSemanticaOpPulo(p, lista);
      AnaliseSemanticaOpCopy(p,lista,secao);
   //   printf("AQUI12345\n" );
     }
