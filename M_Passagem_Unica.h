@@ -4,12 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// typedef struct Teste
-// {
-//  int numero;
-//  struct Teste *pt;
-// }Teste;
-
 
 typedef struct
 {
@@ -20,19 +14,11 @@ typedef struct
     char **Tokens;
 }infoLinha;
 
-// typedef struct
-// {
-//     int numAparicoes;
-//     int * pilhaDePosicoes;
-//     char * nome;
-
-// }ListaSim;
 
 struct pilhaPos
 {
     int pos;
     int linha;
-//    int posInicial;
     struct pilhaPos * pilhaPosProx ;
 };
 
@@ -53,7 +39,6 @@ typedef struct opLinha opLinha;
 
 struct ts 
 {
-    //ListaSim simbolo;
     int numAparicoes;
     pilhaPos * pilhaDePosicoes;
     char *nome;
@@ -68,6 +53,9 @@ struct ts
 };
 
 typedef struct ts TS;
+
+
+void resolvePassagemUnica(char *nomeEntrada, char *nomeSaida);
 
 
 

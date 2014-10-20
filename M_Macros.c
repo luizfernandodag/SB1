@@ -136,7 +136,7 @@ void lendoLinhaMacro(FILE *arquivoEntrada, char *NomeArquivoSaida)
 			//resolvendo caso o programador nao coloque o final da macro
 			if (feof(arquivoEntrada))
 			{
-				EscreveArgErro(contador);
+				// EscreveArgErro(contador);
 				break;
 			}
 		}
@@ -227,6 +227,6 @@ void resolveMacro (char *nomeArquivoEntrada, char *nomeArquivoSaida)
 	}
 	else
 	{
-		printf("nao consegui abrir o arquivo\n");
+		printf("Não foi possível abrir o arquivo para leitura/escrita.\nPor favor, tente novamente mais tarde.\n");
 	}
 }

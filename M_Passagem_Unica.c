@@ -10,7 +10,7 @@
 
 
 
-int main(int argc, char const *argv[])
+void resolvePassagemUnica(char *nomeEntrada, char *nomeSaida)
 {
 	char arqSaida[] = "SAIDA.txt";
 
@@ -29,19 +29,17 @@ int main(int argc, char const *argv[])
 
 	primeiraVez[0] = 1;
 
-	saida = fopen (arqSaida, "w");
+	saida = fopen (nomeSaida, "w");
 	fclose(saida);
-	ptr_file =fopen(argv[1],"r");
+	ptr_file =fopen(nomeEntrada,"r");
 
     if (!ptr_file)
     {
-        return 1;
+        printf("Não foi possível abrir o arquivo para leitura/escrita.\nPor favor, tente novamente mais tarde.\n");
 	}
 
 	linha = (infoLinha *) malloc(1*sizeof(infoLinha));
-    //ini(linha);
-	//while (!feof(ptr_file))
-	//for (j = 0; j < 22; j++)
+
 	while(1)
 	{
 		fim = Analise (linha, ptr_file, tabelaSims, numSim);
@@ -56,29 +54,22 @@ int main(int argc, char const *argv[])
 		 j++;
 
 		tabelaSims = retornaTabelaSimbolos(linha, tabelaSims,  posicao);
-		if(!verificaSections(linha))
-		posicao+= linha->numTokens;
-       //fim Analise Lexica
-
-		//AnaliseSintatica( linha, tabelaSims);
+		posicao+= contaSomaPos( linha); 
+		
 
 		linhas = AnaliseSintatica( linha, tabelaSims,linhas);
 		//chamando a funcao de sintese para gerar o codigo objeto
 		Sintese (linha, arqSaida, tabelaSims, primeiraVez);
-		// Sintese (linha, arqSaida, primeiraVez);
 		
 	}
-
 	fclose(saida);
-	// printfTS(tabelaSims);
-	printf("#########################################################\n");
+
+	analiseSemantica(linhas, tabelaSims);
+
+
 	resolveIndefinicoes(arqSaida,tabelaSims);
-	//resolvePendencia(arqSaida, 3);
-	//resolvePendencia(arqSaida, 6);
 
 	fclose(ptr_file);
-
-	return 0;
 }
 
 
