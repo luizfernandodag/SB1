@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-// #include "M_Sintese.h"
-#include "testeLuiz.h"
+
+#include "M_Sintese.h"
+//#include "testeLuiz.h"
 #include "M_Analise.h"
 
 
@@ -15,6 +16,9 @@ int main(int argc, char const *argv[])
 
     if(!strcmp(teste1,teste2))
     	printf("IGAULLLLL\n");*/
+
+    	FILE *argErros = fopen("erros.txt", "w");
+		fclose(argErros);        
 
 	FILE *ptr_file;
 	int i =0,j = 0, k, fim,m;
@@ -84,9 +88,9 @@ int main(int argc, char const *argv[])
 		
 	}
 
-	printfTS(tabelaSims);
+	//printfTS(tabelaSims);
 
-    printfOpLinha( linhas);
+    //printfOpLinha( linhas);
     analiseSemantica( linhas, tabelaSims);
 	// listaNo = (struct Teste *) malloc(1*sizeof(struct Teste));
 
