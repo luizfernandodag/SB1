@@ -44,6 +44,7 @@ char * maiusculaPre(char *string)
 {
     int i, tamanho;
     char *stringOut, *stringAux;
+    int n = strlen(string);
 
     stringOut = ( char *)malloc((strlen(string)+1)*sizeof(char));
     stringAux = ( char *)malloc((strlen(string)+1)*sizeof(char));
@@ -66,9 +67,10 @@ char * maiusculaPre(char *string)
 se* insereIf(se* listaIfs, char *determinante, int posicaoLinha)
 {
 	se* listaAux = (se*)malloc(sizeof(se));
-	listaAux->determinante = (char*)malloc(sizeof(char*));
+	listaAux->determinante = (char*)malloc(100 *sizeof(char));
 
 	strcpy(listaAux->determinante, determinante);
+	strcat(listaAux->determinante, "\0");
 	listaAux->linha = posicaoLinha;
 
 	listaAux->pf = listaIfs;
@@ -81,9 +83,10 @@ se* insereIf(se* listaIfs, char *determinante, int posicaoLinha)
 equ* insereEqu(equ* listaEqus, char *tokenDeterminado)
 {
 	equ* listaAux = (equ*)malloc(sizeof(equ));
-	listaAux->tokenDeterminado = (char*)malloc(sizeof(char*));
+	listaAux->tokenDeterminado = (char*)malloc(100 *sizeof(char));
 
 	strcpy(listaAux->tokenDeterminado, tokenDeterminado);
+	strcat(listaAux->tokenDeterminado, "\0");
 
 	listaAux->pt = listaEqus;
 
@@ -94,9 +97,10 @@ equ* insereEqu(equ* listaEqus, char *tokenDeterminado)
 codigo* insereLinha(codigo* listaCodigo, char *linha, int posicao)
 {
 	codigo* listaAux = (codigo*)malloc(sizeof(codigo));
-	listaAux->linha = (char*)malloc(strlen(linha)*sizeof(char*));
+	listaAux->linha = (char*)malloc((strlen(linha)+3)*sizeof(char));
 
 	strcpy(listaAux->linha, linha);
+	strcat(listaAux->linha, "\0");
 	listaAux->posicao = posicao;
 
 	listaAux->pl = listaCodigo;
@@ -114,7 +118,7 @@ se* verificaIf(char *linha, int posicaoLinha, se* listaIfs)
 {
 	char *EhIf, *determinante;
 
-	determinante =	(char *)malloc(sizeof(char*));
+	determinante =	(char *)malloc(100 * sizeof(char));
 	determinante = (char*)strtok (linha," ");
 	determinante = (char*)strtok (NULL," ");
 
@@ -133,7 +137,7 @@ equ* verificaEqus(char *linha, equ* listaEqus)
 
 	if (EhUm != NULL)
 	{
-		token =	(char *)malloc(sizeof(char*));
+		token =	(char *)malloc(100 *sizeof(char));
 		token = (char*)strtok (linha,": ");
 
 		listaEqus = insereEqu(listaEqus, token);
@@ -230,6 +234,8 @@ void gravaArquivoSaida(FILE *arquivoSaida, codigo* listaCodigo)
 	fprintf(arquivoSaida, "%s\n", ultima_linha->linha);
 
 	fclose(arquivoSaida);
+	// free(codigo);
+	// free(ultima_linha);
 
 }
 
@@ -244,8 +250,8 @@ codigo* lendoLinha(FILE *arquivoEntrada, codigo *implementacao)
 	equ *listaEQUs = NULL;
 	fpos_t position;
 
-	linha = (char*)malloc(sizeof(char*));
-	linha_preparada = (char*)malloc(sizeof(char*));
+	linha = (char*)malloc(100 * sizeof(char));
+	linha_preparada = (char*)malloc(100* sizeof(char));
 
 	//lendo linha do arquivo
 	fgetpos(arquivoEntrada, &position);
@@ -258,8 +264,9 @@ codigo* lendoLinha(FILE *arquivoEntrada, codigo *implementacao)
 			fsetpos(arquivoEntrada, &position);
 			fscanf(arquivoEntrada, "%[^\n]", linha);
 			fscanf(arquivoEntrada, "%c", &new_line);
-
+   
 			linha_preparada = preparaLinha(linha);
+
 			linha_preparada = maiusculaPre(linha_preparada);
 
 			EhIf = strstr(linha_preparada, "IF");
@@ -301,7 +308,7 @@ char* preparaLinha(char *linha)
 	char *token;
 	char *instrucao;
   	
-  	instrucao = (char*)malloc(sizeof(char*));
+  	instrucao = (char*)calloc(strlen(linha)+3 , sizeof(char));
   	token = strtok (linha," \t");
 
   	strcpy(instrucao, token);
@@ -317,6 +324,8 @@ char* preparaLinha(char *linha)
     	}
     	
   	}
+
+  	strcat(instrucao, "\0");
 
   	return instrucao;
 }

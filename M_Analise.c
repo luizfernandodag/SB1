@@ -555,24 +555,7 @@ int LerArquivo( FILE *ptr_file, fpos_t  pos,int * LinhaAtual, infoLinha * Linhas
        // LinhaAtual[0]++;
         
       
-      for(j = 0;j< Linhas[i].numTokens; j++)
-        {
-
-
-            if(!verificaSeInstrucao(Linhas->Tokens[j]) && !verificaSeDiretiva(Linhas->Tokens[j]) )
-            {
-                
-
-                
-            
-            }
-
-
-
-            
-            
-        }
-
+      
 
     //}
 
@@ -1013,19 +996,22 @@ void EscreveArgErro(int linha, int TipoErro)
 {
 
     FILE *argErros = fopen("erros.txt", "a");
-    if (TipoErro == 1)
-    {
-        printf("\nErro Lexico linha = %d ", linha);
-    }
-    if (TipoErro == 2)
-    {
-        printf("\nErro Sintatico linha = %d ", linha);
-    }
-    if (TipoErro == 3)
-    {
-        printf("\nErro Semantico linha = %d ", linha);
-    }
     
+    if(TipoErro == 1)
+    {
+        printf("erro lexico linha %d\n",linha );
+    }
+
+    if(TipoErro == 2)
+    {
+        printf("erro sintatico linha %d\n",linha );
+    }
+    if(TipoErro == 3)
+    {
+        printf("erro semantico linha %d\n",linha );
+    }
+
+
 
     fprintf(argErros, "%d %d |", TipoErro, linha);
     fclose(argErros);
@@ -1765,15 +1751,65 @@ void AnaliseSintaticaOpCopy(infoLinha * linha, int posInicial,TS * tabelaSims)
 
    if(  verificaSeOpCopy(linha->Tokens[i]))
    {
-        if( numTokens - i != 4)
+        if( numTokens - i == 4)
         {
-            printf("AnaliseSintaticaOpCopy A\n");
-           // EscreveArgErro(linha->numLinha,2);        
+            if(!( verificaSeVariavel(linha->Tokens[i+1]) && verificaSeVariavel(linha->Tokens[i+3]) && !strcmp(linha->Tokens[i+1], ",")  ))
+            {   
+               //printf("\n AQUI 1");   
+                EscreveArgErro(linha->numLinha,2);        
+            }
         }
-        else if(!verificaSeVariavel(linha->Tokens[i+1]) || !verificaSeVariavel(linha->Tokens[i+3]))
-        {   printf("AnaliseSintaticaOpCopy B\n");
-            //EscreveArgErro(linha->numLinha,2);        
+        else if(numTokens - i == 6)
+        {
+            if(verificaSeMaisOuMenos(linha->Tokens[i+2]))
+            {
+
+                if( !(verificaSeVariavel(linha->Tokens[i+1]) && verificaSeNumero(linha->Tokens[i+3]) && !strcmp(linha->Tokens[i+4], ",") && verificaSeVariavel(linha->Tokens[i+5])))
+                {
+                    //printf("\n AQUI 2");   
+                EscreveArgErro(linha->numLinha,2);        
+
+                }
+
+            }
+            else if( verificaSeMaisOuMenos(linha->Tokens[i+4]))
+            {
+                if(!(verificaSeVariavel(linha->Tokens[i+1]) && !strcmp( linha->Tokens[i+2], ",") && verificaSeVariavel(linha->Tokens[i+3]) && verificaSeNumero(linha->Tokens[i+5])                    ))
+                {
+
+                  //      printf("\n AQUI 3");   
+                EscreveArgErro(linha->numLinha,2);        
+
+
+                }
+
+
+            }
+            else
+            {   //printf("\n AQUI 4");
+
+                EscreveArgErro(linha->numLinha,2);        
+            }
+
         }
+        else if(numTokens - i == 8)
+        {
+
+            if( !( verificaSeVariavel( linha->Tokens[i+1]) && verificaSeMaisOuMenos(linha->Tokens[i+2]) && verificaSeNumero(linha->Tokens[i+3]) && !strcmp(linha->Tokens[i+4], ",") && verificaSeVariavel(linha->Tokens[i+5]) && verificaSeMaisOuMenos(linha->Tokens[i+6]) && verificaSeNumero(linha->Tokens[i+7])      ))
+            {
+              //  printf("\n AQUI 5");
+
+                EscreveArgErro(linha->numLinha,2);        
+            }
+        }
+        else
+        {
+         //   printf("\n AQUI 6");
+
+                EscreveArgErro(linha->numLinha,2);        
+        }
+
+        
 
    }
 

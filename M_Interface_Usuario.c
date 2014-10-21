@@ -29,12 +29,6 @@ int main(int argc, char const *argv[])
 	strcat(nomeSaida, ".o");
 	strcat(nomeSaidaPre, ".pre");
 	strcat(nomeSaidaMacro, ".mcr");
-
-	printf("Declarei e copiei nomes dos arquivos\n");
-	printf("nomeEntrada = %s\n", nomeEntrada);
-	printf("nomeSaida = %s\n", nomeSaida);
-	printf("nomeSaidaPre = %s\n", nomeSaidaPre);
-	printf("nomeSaidaMacro = %s\n", nomeSaidaMacro);
 	
 	if (!strcmp(argv[1], "-p"))
 	{
