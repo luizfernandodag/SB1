@@ -78,7 +78,7 @@ assembly* carregaMenmonicos(assembly *listaAssembly)
 }
 
 //funcao principal do modulo que gera o cógigo objeto, porem ainda não resolve as pendencias
-void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, int *primeiraVez)
+void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos)
 {
 	_Bool status;
 	assembly *listaAssembly = NULL, *resultadoBuscaAssembly;
@@ -92,7 +92,7 @@ void Sintese (infoLinha *linha, char *nomeArquivoSaida, TS *TabelaSimbolos, int 
 
 	saida = fopen(nomeArquivoSaida, "a");
 	
-        int i;
+    int i;
 	for ( i = 0; i < linha->numTokens; ++i)
 	{	
 		//verifica se o simbolo é uma instrucao de assembly

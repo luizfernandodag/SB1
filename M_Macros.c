@@ -83,9 +83,10 @@ void gravaMacro(char *NomeArquivoSaida, macro *resultadoBusca)
 linha_Macro* insereLinhaMacro(linha_Macro* listaLinhaMacro, char *linha)
 {
 	linha_Macro* listaAux = (linha_Macro*)malloc(sizeof(linha_Macro));
-	listaAux->linha = (char*)malloc(sizeof(char*));
+	listaAux->linha = (char*)malloc(100 * sizeof(char));
 
 	strcpy(listaAux->linha, linha);
+	strcat(listaAux->linha, "\0");
 
 	listaAux->pl = listaLinhaMacro;
 	
@@ -119,7 +120,7 @@ void lendoLinhaMacro(FILE *arquivoEntrada, char *NomeArquivoSaida)
 	macro *macro = NULL, *resultadoBusca;
 	int contador = 0;
 
-	linha = (char*)malloc(sizeof(char*));
+	linha = (char*)malloc(100*sizeof(char));
 
 	//lendo linha do arquivo
 	fscanf(arquivoEntrada, "%[^\n]%*c", linha);
@@ -171,7 +172,7 @@ macro* guardandoMacro(macro *macro, FILE *arquivoEntrada, char *linha)
 	
 	linha_Macro *linhaCodigo = NULL;
 
-	linhaMacro = (char*)malloc(sizeof(char*));
+	linhaMacro = (char*)malloc(100 * sizeof(char));
 
 	fscanf(arquivoEntrada, "%[^\n]%*c", linhaMacro);
 
@@ -181,10 +182,11 @@ macro* guardandoMacro(macro *macro, FILE *arquivoEntrada, char *linha)
 		fscanf(arquivoEntrada, "%[^\n]%*c", linhaMacro);
 	}
 
-	nomeMacro =	(char *)malloc(sizeof(char*));
+	nomeMacro =	(char *)malloc(100 *sizeof(char));
 	nomeMacro = (char*)strtok (linha,": ");
-	NAME =	(char *)malloc(sizeof(char*));	
+	NAME =	(char *)malloc(100*sizeof(char));	
 	strcpy(NAME, nomeMacro);
+	strcat(NAME, "\0");
 
 	macro = insereMacro(macro, NAME, linhaCodigo);
 	

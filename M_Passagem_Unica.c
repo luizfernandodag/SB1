@@ -12,27 +12,24 @@
 
 void resolvePassagemUnica(char *nomeEntrada, char *nomeSaida)
 {
+
+	
 	infoLinha *linha;
 	FILE *ptr_file, *saida;
+
 	FILE *argErros = fopen("erros.txt", "w");
-	fclose(argErros);        
+	fclose(argErros);    
+
 	int i =0,j = 0, k, fim,m, posicao = 1;
 	int *primeiraVez;
 	TS * tabelaSims = NULL;
-	int * numSim;
+	int * numSim = NULL;
 	opLinha * linhas = NULL;
-	numSim = (int *)malloc(1*sizeof(int));
-	numSim[0] = 0;
-
-
-	primeiraVez = (int*)malloc(sizeof(int));
-
-	primeiraVez[0] = 1;
-
 	saida = fopen (nomeSaida, "w");
 	fclose(saida);
 
 	ptr_file =fopen(nomeEntrada,"r");
+
 
 	//verifica se o arquivo para leitura foi aberto
     if (!ptr_file)
@@ -51,27 +48,23 @@ void resolvePassagemUnica(char *nomeEntrada, char *nomeSaida)
 		{
 			break;
 		}
-
 		EscreveNumLinha(linha, j);
 
 		 j++;
+	
+	 	tabelaSims = retornaTabelaSimbolos(linha, tabelaSims,  posicao);
+	 	posicao+= contaSomaPos( linha); 
 
-		tabelaSims = retornaTabelaSimbolos(linha, tabelaSims,  posicao);
-		posicao+= contaSomaPos( linha); 
-		
+	 	linhas = AnaliseSintatica( linha, tabelaSims,linhas);
+	 
+	// 	//chamando a funcao de sintese para gerar o codigo objeto
+		Sintese (linha, nomeSaida, tabelaSims);
+	 }
+	 
 
-		linhas = AnaliseSintatica( linha, tabelaSims,linhas);
-		//chamando a funcao de sintese para gerar o codigo objeto
-		Sintese (linha, nomeSaida, tabelaSims, primeiraVez);
-		
-	}
-	fclose(saida);
-
-	analiseSemantica(linhas, tabelaSims);
-
-	//resolvendo as indefinicoes de simbolos do codigo objeto
-	resolveIndefinicoes(nomeSaida,tabelaSims);
-
+	 analiseSemantica(linhas, tabelaSims);
+	// //resolvendo as indefinicoes de simbolos do codigo objeto
+	 resolveIndefinicoes(nomeSaida,tabelaSims);
 	fclose(ptr_file);
 }
 
