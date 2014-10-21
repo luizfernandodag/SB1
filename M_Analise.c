@@ -997,8 +997,22 @@ void EscreveArgErro(int linha, int TipoErro)
 
     FILE *argErros = fopen("erros.txt", "a");
     
-    
-//printf("Escreve ARG ERRO\n");
+    if(TipoErro == 1)
+    {
+        printf("erro lexico linha %d\n",linha );
+    }
+
+    if(TipoErro == 2)
+    {
+        printf("erro sintatico linha %d\n",linha );
+    }
+    if(TipoErro == 3)
+    {
+        printf("erro semantico linha %d\n",linha );
+    }
+
+
+
     fprintf(argErros, "%d %d |", TipoErro, linha);
     fclose(argErros);
 }
